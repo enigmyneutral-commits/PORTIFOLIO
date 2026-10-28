@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { Menu, X, ArrowUpRight, Globe } from 'lucide-react';
+import { EnigmyLogo } from './EnigmyLogo';
 
 interface HeaderProps {
   currentView: string;
@@ -35,23 +36,10 @@ export const Header: React.FC<HeaderProps> = ({ currentView, onNavigate, onOpenI
         {/* Zone 1: Single Brand Wordmark with Logo */}
         <button
           onClick={() => handleNavClick('home')}
-          className="flex items-center gap-3 text-left group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B7F36B] rounded-sm py-1"
+          className="flex items-center text-left group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B7F36B] rounded-sm py-1"
           aria-label="Enigmy Neutral Home"
         >
-          <img
-            src="/assets/aistudio/enigme_f15dd37a.png"
-            alt="Enigmy Neutral"
-            referrerPolicy="no-referrer"
-            className="w-9 h-9 object-contain brightness-110 filter contrast-125"
-          />
-          <div className="flex flex-col">
-            <span className="font-bold text-base sm:text-lg tracking-tight text-[#F5F7F4] group-hover:text-white transition-colors whitespace-nowrap">
-              ENIGMY NEUTRAL
-            </span>
-            <span className="text-[10px] font-mono tracking-widest text-[#737D77] uppercase -mt-0.5">
-              SOFTWARE ENGINEERING
-            </span>
-          </div>
+          <EnigmyLogo size="md" showSubtitle />
         </button>
 
         {/* Zone 2: Navigation Links */}

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { Mail, MessageCircle, Github, ArrowUpRight, ShieldCheck } from 'lucide-react';
+import { EnigmyLogo } from './EnigmyLogo';
 
 interface FooterProps {
   onNavigate: (view: string) => void;
@@ -21,15 +22,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenPrivacy, onOpe
           {/* Brand & Leadership */}
           <div className="space-y-4">
             <div className="flex items-center gap-2.5">
-              <img
-                src="/assets/aistudio/enigme_f15dd37a.png"
-                alt="Enigmy Neutral"
-                referrerPolicy="no-referrer"
-                className="w-7 h-7 object-contain"
-              />
-              <span className="font-bold text-base tracking-tight text-[#F5F7F4]">
-                ENIGMY NEUTRAL
-              </span>
+              <EnigmyLogo size="sm" />
             </div>
             
             <p className="text-xs text-[#A4ADA8] leading-relaxed">
@@ -197,8 +190,15 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenPrivacy, onOpe
 
         {/* Bottom Bar */}
         <div className="mt-12 pt-6 border-t border-[#293033] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#737D77]">
-          <div>
-            © {currentYear} Enigmy Neutral · {t.footer.rightsReserved}
+          <div className="space-y-1 text-center sm:text-left">
+            <div>
+              © {currentYear} Enigmy Neutral · {t.footer.rightsReserved}
+            </div>
+            <div className="text-[11px] font-mono text-[#A4ADA8]">
+              {language === 'pt-BR' 
+                ? 'Empresa de tecnologia sediada no Paraguai · Atuação internacional' 
+                : 'Technology company based in Paraguay · International operations'}
+            </div>
           </div>
 
           <div className="flex items-center gap-6">

@@ -7,21 +7,26 @@ import {
   Network, 
   Layers, 
   Database, 
-  Cloud, 
   Smartphone, 
   ExternalLink, 
   Lock, 
   Check, 
   Copy,
-  BookOpen
+  BookOpen,
+  ArrowRight
 } from 'lucide-react';
 
 interface ProjectCardProps {
   project: RepositoryItem;
   onRequestAccess: (project: RepositoryItem) => void;
+  onSelectProject?: (project: RepositoryItem) => void;
 }
 
-export const ProjectCard: React.FC<ProjectCardProps> = ({ project, onRequestAccess }) => {
+export const ProjectCard: React.FC<ProjectCardProps> = ({ 
+  project, 
+  onRequestAccess,
+  onSelectProject 
+}) => {
   const { language, t } = useLanguage();
   const [copied, setCopied] = useState(false);
 
@@ -53,11 +58,20 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project, onRequestAcce
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const description = language === 'pt-BR' ? project.descriptionPt : project.descriptionEn;
+  const handleCardClick = () => {
+    if (onSelectProject) {
+      onSelectProject(project);
+    }
+  };
+
+  const isPt = language === 'pt-BR';
+  const description = isPt ? project.descriptionPt : project.descriptionEn;
 
   return (
-    <article className="group bg-[#15191B] border border-[#293033] hover:border-[#3c464a] rounded-lg p-5 flex flex-col justify-between transition-all duration-200">
-      
+    <article 
+      onClick={handleCardClick}
+      className="group bg-[#15191B] border border-[#293033] hover:border-[#3c464a] rounded-lg p-5 flex flex-col justify-between transition-all duration-200 cursor-pointer shadow-sm hover:shadow-md"
+    >
       <div className="space-y-3">
         {/* Top Header: Category & Visibility */}
         <div className="flex items-center justify-between text-xs text-[#737D77]">
@@ -103,7 +117,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project, onRequestAcce
           {description}
         </p>
 
-        {/* Confirmed Technologies (Anti-slop zero pill discipline: clean typographic list) */}
+        {/* Confirmed Technologies */}
         <div className="pt-2 text-[11px] font-mono text-[#737D77] flex flex-wrap gap-x-2 gap-y-1 items-center">
           {project.confirmedTech.map((tech, idx) => (
             <React.Fragment key={tech}>
@@ -116,28 +130,21 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project, onRequestAcce
 
       {/* Action Footer */}
       <div className="pt-4 mt-4 border-t border-[#293033] flex items-center justify-between">
-        <span className="text-[10px] font-mono text-[#737D77]">
-          {project.lastAudited}
+        <span className="text-[11px] font-mono text-[#737D77] group-hover:text-[#F5F7F4] transition-colors flex items-center gap-1">
+          <span>{isPt ? 'Ver Subpágina' : 'View Subpage'}</span>
+          <ArrowRight className="w-3 h-3 text-[#B7F36B]" />
         </span>
 
         {project.visibility === 'public' ? (
-          <a
-            href={project.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-xs font-mono font-medium text-[#B7F36B] hover:text-[#8FCB4F] transition-colors cursor-pointer"
-          >
-            <span>{t.projects.openRepo}</span>
+          <span className="text-xs font-mono font-medium text-[#B7F36B] flex items-center gap-1">
+            <span>GitHub</span>
             <ExternalLink className="w-3 h-3" />
-          </a>
+          </span>
         ) : (
-          <button
-            onClick={() => onRequestAccess(project)}
-            className="inline-flex items-center gap-1 text-xs font-mono font-medium text-[#A4ADA8] hover:text-[#F5F7F4] transition-colors cursor-pointer"
-          >
-            <span>{t.projects.requestPrivate}</span>
+          <span className="text-xs font-mono font-medium text-[#A4ADA8] flex items-center gap-1">
+            <span>{isPt ? 'Sob Autorização' : 'Auth Required'}</span>
             <Lock className="w-3 h-3 text-[#737D77]" />
-          </button>
+          </span>
         )}
       </div>
 

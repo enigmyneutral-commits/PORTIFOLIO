@@ -22,9 +22,10 @@ import {
 
 interface ProjectsPageProps {
   onRequestAccess: (project: RepositoryItem) => void;
+  onSelectProject: (project: RepositoryItem) => void;
 }
 
-export const ProjectsPage: React.FC<ProjectsPageProps> = ({ onRequestAccess }) => {
+export const ProjectsPage: React.FC<ProjectsPageProps> = ({ onRequestAccess, onSelectProject }) => {
   const { language, t } = useLanguage();
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -256,6 +257,7 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ onRequestAccess }) =
               key={repo.id}
               project={repo}
               onRequestAccess={onRequestAccess}
+              onSelectProject={onSelectProject}
             />
           ))}
         </div>

@@ -26,6 +26,7 @@ interface HomePageProps {
   onOpenInquiry: () => void;
   onRequestAccess: (project: RepositoryItem) => void;
   onOpenProduct: (product: ProductItem) => void;
+  onSelectProject?: (project: RepositoryItem) => void;
 }
 
 export const HomePage: React.FC<HomePageProps> = ({
@@ -33,6 +34,7 @@ export const HomePage: React.FC<HomePageProps> = ({
   onOpenInquiry,
   onRequestAccess,
   onOpenProduct,
+  onSelectProject,
 }) => {
   const { language, t } = useLanguage();
 
@@ -334,6 +336,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               key={p.id}
               project={p}
               onRequestAccess={onRequestAccess}
+              onSelectProject={onSelectProject}
             />
           ))}
         </div>

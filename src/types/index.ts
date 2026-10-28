@@ -42,6 +42,11 @@ export interface RepositoryItem {
   category: ProjectCategory;
   descriptionEn: string;
   descriptionPt: string;
+  longDescriptionEn?: string;
+  longDescriptionPt?: string;
+  architectureEn?: string;
+  architecturePt?: string;
+  modules?: string[];
   confirmedTech: string[];
   isFeatured?: boolean;
   notes?: string;

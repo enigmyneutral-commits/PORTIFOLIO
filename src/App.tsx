@@ -6,6 +6,7 @@ import { HomePage } from './pages/HomePage';
 import { EngineeringPage } from './pages/EngineeringPage';
 import { ProductsPage } from './pages/ProductsPage';
 import { ProjectsPage } from './pages/ProjectsPage';
+import { ProjectDetailPage } from './pages/ProjectDetailPage';
 import { TechnologyPage } from './pages/TechnologyPage';
 import { AboutPage } from './pages/AboutPage';
 import { ContactPage } from './pages/ContactPage';
@@ -17,8 +18,19 @@ import { RepositoryItem, ProductItem } from './types';
 import { REPOSITORIES } from './data/repositories';
 
 function AppContent() {
+  const [activeProjectId, setActiveProjectId] = useState<string | null>(() => {
+    const hash = window.location.hash.replace('#', '');
+    if (hash.startsWith('project/')) {
+      return hash.replace('project/', '');
+    }
+    return null;
+  });
+
   const [currentView, setCurrentView] = useState<string>(() => {
     const hash = window.location.hash.replace('#', '').toLowerCase();
+    if (hash.startsWith('project/')) {
+      return 'project-detail';
+    }
     const validViews = ['home', 'engineering', 'products', 'projects', 'technology', 'about', 'contact'];
     return validViews.includes(hash) ? hash : 'home';
   });
@@ -31,7 +43,16 @@ function AppContent() {
   // Sync hash changes
   useEffect(() => {
     const handleHashChange = () => {
-      const hash = window.location.hash.replace('#', '').toLowerCase();
+      const rawHash = window.location.hash.replace('#', '');
+      const hash = rawHash.toLowerCase();
+
+      if (hash.startsWith('project/')) {
+        const id = rawHash.replace(/^project\//i, '');
+        setActiveProjectId(id);
+        setCurrentView('project-detail');
+        return;
+      }
+
       const validViews = ['home', 'engineering', 'products', 'projects', 'technology', 'about', 'contact'];
       if (validViews.includes(hash)) {
         setCurrentView(hash);
@@ -48,8 +69,14 @@ function AppContent() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleSelectProject = (project: RepositoryItem) => {
+    setActiveProjectId(project.id);
+    setCurrentView('project-detail');
+    window.location.hash = `project/${project.id}`;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const handleRequestAccessFromProduct = (product: ProductItem) => {
-    // Find matching repository if available or construct repository item representation
     const matchingRepo = REPOSITORIES.find((r) => r.name.toLowerCase().includes(product.id.toLowerCase())) || {
       id: product.id,
       name: product.name,
@@ -67,12 +94,17 @@ function AppContent() {
     setSelectedProjectForAccess(matchingRepo);
   };
 
+  // Resolve currently active project for subpage
+  const currentProject = REPOSITORIES.find(
+    (r) => r.id === activeProjectId || r.name.toLowerCase() === activeProjectId?.toLowerCase()
+  ) || REPOSITORIES[0];
+
   return (
     <div className="min-h-screen bg-[#080A0B] text-[#F5F7F4] flex flex-col font-sans selection:bg-[#B7F36B] selection:text-[#080A0B]">
       
       {/* Top Bar Header */}
       <Header
-        currentView={currentView}
+        currentView={currentView === 'project-detail' ? 'projects' : currentView}
         onNavigate={handleNavigate}
         onOpenInquiry={() => setInquiryModalOpen(true)}
       />
@@ -85,12 +117,13 @@ function AppContent() {
             onOpenInquiry={() => setInquiryModalOpen(true)}
             onRequestAccess={(project) => setSelectedProjectForAccess(project)}
             onOpenProduct={(product) => setSelectedProductForModal(product)}
+            onSelectProject={handleSelectProject}
           />
         )}
 
         {currentView === 'engineering' && (
           <EngineeringPage
-            onOpenInquiry={(serviceName) => {
+            onOpenInquiry={() => {
               setInquiryModalOpen(true);
             }}
           />
@@ -106,6 +139,17 @@ function AppContent() {
         {currentView === 'projects' && (
           <ProjectsPage
             onRequestAccess={(project) => setSelectedProjectForAccess(project)}
+            onSelectProject={handleSelectProject}
+          />
+        )}
+
+        {currentView === 'project-detail' && (
+          <ProjectDetailPage
+            project={currentProject}
+            onBack={() => handleNavigate('projects')}
+            onRequestAccess={(project) => setSelectedProjectForAccess(project)}
+            onSelectProject={handleSelectProject}
+            allProjects={REPOSITORIES}
           />
         )}
 
