@@ -1,0 +1,1344 @@
+INVENTÁRIO DE REPOSITÓRIOS GITHUB
+
+Enigmy Neutral · FLOW · Perfil pessoal
+
+Data de levantamento: 28 de outubro de 2026
+
+1. Escopo e limitações
+
+A lista abaixo foi obtida pela integração GitHub conectada. Ela reflete os repositórios retornados por cada perfil no momento da consulta, incluindo visibilidade pública/privada. O perfil viniamaral2026-cpu retornou zero repositórios pela integração; isso não significa que o perfil não possua repositórios. A lista desse perfil precisa de nova verificação por uma conexão autorizada ou consulta direta.
+
+As descrições deste documento são resumos preliminares inferidos a partir do nome do repositório e do contexto conhecido. Não são uma auditoria do código e não afirmam que os projetos estejam completos, implantados, seguros ou prontos para produção. Antes de usar no portfólio comercial, revisar README, código, testes, demonstração, licença, dependências e exposição de segredos.
+
+2. Repositórios prioritários da Enigmy Neutral
+
+Perfil: https://github.com/enigmyneutral-commits — 12 repositórios retornados (1 público e 11 privados).
+
+enigmy-neutral
+
+Visibilidade: Privado. Link: https://github.com/enigmyneutral-commits/enigmy-neutral
+
+Repositório central da marca/ecossistema Enigmy Neutral. Candidato prioritário para apresentar arquitetura, visão do produto e organização técnica; revisar README e estado de execução antes de promovê-lo como produto pronto.
+
+enigmy-neutral-agente
+
+Visibilidade: Privado. Link: https://github.com/enigmyneutral-commits/enigmy-neutral-agente
+
+Projeto de agente de IA associado à Enigmy Neutral. Confirmar capacidades, integrações, limites e estado real de implementação no README/código.
+
+Modulo-nincode
+
+Visibilidade: Privado. Link: https://github.com/enigmyneutral-commits/Modulo-nincode
+
+Módulo do ecossistema NINCODE/NIMCode. Documentar responsabilidade do módulo, interfaces e dependências.
+
+pluguin-module-nincode
+
+Visibilidade: Privado. Link: https://github.com/enigmyneutral-commits/pluguin-module-nincode
+
+Plugin/módulo complementar do NINCODE. O nome do repositório contém a grafia “pluguin”; manter o nome real ao criar links.
+
+NINCODE-Telemetry-Enigmy-Neutral
+
+Visibilidade: Privado. Link: https://github.com/enigmyneutral-commits/NINCODE-Telemetry-Enigmy-Neutral
+
+Repositório relacionado à telemetria do NINCODE. Antes de divulgar, explicar com clareza quais eventos são coletados, consentimento, retenção e controles de privacidade.
+
+devnet
+
+Visibilidade: Público. Link: https://github.com/enigmyneutral-commits/devnet
+
+Projeto público DEEVO DEVNET/Devnet. É um dos poucos repositórios públicos do perfil; verificar README, demonstração, licença e estado do projeto antes de destacá-lo.
+
+nimcode-website
+
+Visibilidade: Privado. Link: https://github.com/enigmyneutral-commits/nimcode-website
+
+Site/website associado ao NIMCode. Candidato a mostrar interface e posicionamento do produto, desde que haja demonstração segura ou capturas revisadas.
+
+Nim-code-cli
+
+Visibilidade: Privado. Link: https://github.com/enigmyneutral-commits/Nim-code-cli
+
+CLI relacionado ao NIMCode. O inventário indica tamanho zero; tratar como estrutura inicial/placeholder até confirmar conteúdo e implementação.
+
+sovereign-ai-infrastructure
+
+Visibilidade: Privado. Link: https://github.com/enigmyneutral-commits/sovereign-ai-infrastructure
+
+Projeto com foco aparente em infraestrutura soberana de IA. O inventário indica tamanho zero; não apresentar como infraestrutura funcional sem validação.
+
+sabore
+
+Visibilidade: Privado. Link: https://github.com/enigmyneutral-commits/sabore
+
+Repositório principal do projeto Sabore. O propósito exato e o estado atual devem ser confirmados pelo README e pela estrutura do código.
+
+sabore-web
+
+Visibilidade: Privado. Link: https://github.com/enigmyneutral-commits/sabore-web
+
+Interface web associada ao Sabore. Confirmar stack, funcionalidades concluídas e relação com o repositório principal.
+
+beckend-sabore
+
+Visibilidade: Privado. Link: https://github.com/enigmyneutral-commits/beckend-sabore
+
+Backend associado ao Sabore; o nome do repositório usa “beckend”. Confirmar API, persistência, autenticação e endpoints efetivamente implementados.
+
+3. Inventário completo — Enigmy Neutral
+
+Repositório
+	
+
+Visibilidade
+	
+
+Descrição preliminar
+
+enigmy-neutral
+	
+
+Privado
+	
+
+Repositório central da marca/ecossistema Enigmy Neutral. Candidato prioritário para apresentar arquitetura, visão do produto e organização técnica; revisar README e estado de execução antes de promovê-lo como produto pronto.
+
+enigmy-neutral-agente
+	
+
+Privado
+	
+
+Projeto de agente de IA associado à Enigmy Neutral. Confirmar capacidades, integrações, limites e estado real de implementação no README/código.
+
+Modulo-nincode
+	
+
+Privado
+	
+
+Módulo do ecossistema NINCODE/NIMCode. Documentar responsabilidade do módulo, interfaces e dependências.
+
+pluguin-module-nincode
+	
+
+Privado
+	
+
+Plugin/módulo complementar do NINCODE. O nome do repositório contém a grafia “pluguin”; manter o nome real ao criar links.
+
+NINCODE-Telemetry-Enigmy-Neutral
+	
+
+Privado
+	
+
+Repositório relacionado à telemetria do NINCODE. Antes de divulgar, explicar com clareza quais eventos são coletados, consentimento, retenção e controles de privacidade.
+
+devnet
+	
+
+Público
+	
+
+Projeto público DEEVO DEVNET/Devnet. É um dos poucos repositórios públicos do perfil; verificar README, demonstração, licença e estado do projeto antes de destacá-lo.
+
+nimcode-website
+	
+
+Privado
+	
+
+Site/website associado ao NIMCode. Candidato a mostrar interface e posicionamento do produto, desde que haja demonstração segura ou capturas revisadas.
+
+Nim-code-cli
+	
+
+Privado
+	
+
+CLI relacionado ao NIMCode. O inventário indica tamanho zero; tratar como estrutura inicial/placeholder até confirmar conteúdo e implementação.
+
+sabore
+	
+
+Privado
+	
+
+Repositório principal do projeto Sabore. O propósito exato e o estado atual devem ser confirmados pelo README e pela estrutura do código.
+
+sabore-web
+	
+
+Privado
+	
+
+Interface web associada ao Sabore. Confirmar stack, funcionalidades concluídas e relação com o repositório principal.
+
+beckend-sabore
+	
+
+Privado
+	
+
+Backend associado ao Sabore; o nome do repositório usa “beckend”. Confirmar API, persistência, autenticação e endpoints efetivamente implementados.
+
+sovereign-ai-infrastructure
+	
+
+Privado
+	
+
+Projeto com foco aparente em infraestrutura soberana de IA. O inventário indica tamanho zero; não apresentar como infraestrutura funcional sem validação.
+
+4. Inventário completo — FLOW / flow-social-network
+
+Perfil: https://github.com/flow-social-network — 100 repositórios retornados (47 públicos e 53 privados).
+
+#
+	
+
+Repositório
+	
+
+Visibilidade
+	
+
+Descrição preliminar
+
+1
+	
+
+PAINEL-DMG
+	
+
+Público
+	
+
+Projeto relacionado a inteligência artificial, agentes ou ferramentas de IA. A descrição funcional precisa ser confirmada no README e no código.
+
+2
+	
+
+painel-dmg-vf
+	
+
+Privado
+	
+
+Projeto relacionado a inteligência artificial, agentes ou ferramentas de IA. A descrição funcional precisa ser confirmada no README e no código.
+
+3
+	
+
+web-site-dmg-records
+	
+
+Privado
+	
+
+Projeto de interface web/site. Confirmar público-alvo, framework, páginas implementadas e se existe demonstração pública.
+
+4
+	
+
+v0-dresbach-host-panel
+	
+
+Privado
+	
+
+Projeto relacionado a hospedagem, painel ou infraestrutura web. Confirmar escopo técnico, ambiente e estado antes de anunciar como serviço operacional.
+
+5
+	
+
+gingasocilawebsite
+	
+
+Privado
+	
+
+Projeto de interface web/site. Confirmar público-alvo, framework, páginas implementadas e se existe demonstração pública.
+
+6
+	
+
+Ginga-Fone
+	
+
+Privado
+	
+
+Projeto relacionado a aplicativo Android ou experiência móvel. Confirmar plataforma, funcionalidades, build e disponibilidade de instalação.
+
+7
+	
+
+Ginga-AI-Studio
+	
+
+Privado
+	
+
+Projeto relacionado a inteligência artificial, agentes ou ferramentas de IA. A descrição funcional precisa ser confirmada no README e no código.
+
+8
+	
+
+LottoStat_Pro-
+	
+
+Privado
+	
+
+Repositório identificado no perfil conectado. O nome, por si só, não comprova finalidade nem maturidade; revisar README, estrutura, testes e histórico antes de publicar uma descrição definitiva.
+
+9
+	
+
+armarinhodojourge
+	
+
+Privado
+	
+
+Projeto de aplicação, site ou experimento voltado a um negócio, marca ou comunidade. Confirmar objetivo e funcionalidades atuais.
+
+10
+	
+
+client-hub
+	
+
+Público
+	
+
+Sistema de negócio, painel administrativo, ERP, PDV ou gestão. Confirmar módulos concluídos e se os dados de demonstração são seguros.
+
+11
+	
+
+projedodresbachhosting
+	
+
+Privado
+	
+
+Projeto relacionado a hospedagem, painel ou infraestrutura web. Confirmar escopo técnico, ambiente e estado antes de anunciar como serviço operacional.
+
+12
+	
+
+teste-frontend
+	
+
+Privado
+	
+
+Projeto de interface web/site. Confirmar público-alvo, framework, páginas implementadas e se existe demonstração pública.
+
+13
+	
+
+RIFT-PLAY
+	
+
+Público
+	
+
+Projeto relacionado a jogo ou experiência interativa. Confirmar engine/stack, estado jogável e instruções de execução.
+
+14
+	
+
+bot-dresbach-hosting
+	
+
+Público
+	
+
+Projeto relacionado a hospedagem, painel ou infraestrutura web. Confirmar escopo técnico, ambiente e estado antes de anunciar como serviço operacional.
+
+15
+	
+
+app-dresbach-hosting
+	
+
+Público
+	
+
+Projeto relacionado a hospedagem, painel ou infraestrutura web. Confirmar escopo técnico, ambiente e estado antes de anunciar como serviço operacional.
+
+16
+	
+
+Dresbach-Hosting-do-Brasil---Site-Tempor-rio
+	
+
+Privado
+	
+
+Projeto relacionado a hospedagem, painel ou infraestrutura web. Confirmar escopo técnico, ambiente e estado antes de anunciar como serviço operacional.
+
+17
+	
+
+core-framework
+	
+
+Público
+	
+
+Projeto com indicação de backend, API ou núcleo de software. Confirmar endpoints, banco de dados, autenticação e cobertura de testes.
+
+18
+	
+
+dresbach-assistente
+	
+
+Público
+	
+
+Projeto relacionado a inteligência artificial, agentes ou ferramentas de IA. A descrição funcional precisa ser confirmada no README e no código.
+
+19
+	
+
+dresbachhosting
+	
+
+Público
+	
+
+Projeto relacionado a hospedagem, painel ou infraestrutura web. Confirmar escopo técnico, ambiente e estado antes de anunciar como serviço operacional.
+
+20
+	
+
+hosting_dresbach
+	
+
+Público
+	
+
+Projeto relacionado a hospedagem, painel ou infraestrutura web. Confirmar escopo técnico, ambiente e estado antes de anunciar como serviço operacional.
+
+21
+	
+
+Dresbach-Hosting-oficial
+	
+
+Público
+	
+
+Projeto relacionado a hospedagem, painel ou infraestrutura web. Confirmar escopo técnico, ambiente e estado antes de anunciar como serviço operacional.
+
+22
+	
+
+dresbach-core
+	
+
+Público
+	
+
+Projeto relacionado a hospedagem, painel ou infraestrutura web. Confirmar escopo técnico, ambiente e estado antes de anunciar como serviço operacional.
+
+23
+	
+
+cognitive-plataform
+	
+
+Privado
+	
+
+Repositório identificado no perfil conectado. O nome, por si só, não comprova finalidade nem maturidade; revisar README, estrutura, testes e histórico antes de publicar uma descrição definitiva.
+
+24
+	
+
+dresbachprecgit
+	
+
+Público
+	
+
+Repositório identificado no perfil conectado. O nome, por si só, não comprova finalidade nem maturidade; revisar README, estrutura, testes e histórico antes de publicar uma descrição definitiva.
+
+25
+	
+
+dmgrecords
+	
+
+Público
+	
+
+Projeto ligado a mídia, conteúdo, rádio ou marca DMG. Confirmar objetivo, recursos e situação atual.
+
+26
+	
+
+dresbach-Web-Hosting-Company
+	
+
+Público
+	
+
+Projeto relacionado a hospedagem, painel ou infraestrutura web. Confirmar escopo técnico, ambiente e estado antes de anunciar como serviço operacional.
+
+27
+	
+
+dresbach-Web-Hosting-beckend-go
+	
+
+Público
+	
+
+Projeto relacionado a hospedagem, painel ou infraestrutura web. Confirmar escopo técnico, ambiente e estado antes de anunciar como serviço operacional.
+
+28
+	
+
+DevMind-OS-Frontend
+	
+
+Privado
+	
+
+Projeto de interface web/site. Confirmar público-alvo, framework, páginas implementadas e se existe demonstração pública.
+
+29
+	
+
+techops
+	
+
+Público
+	
+
+Projeto com indicação de segurança, diagnóstico ou operações técnicas. Confirmar escopo, uso responsável, testes e documentação.
+
+30
+	
+
+Collabora
+	
+
+Público
+	
+
+Repositório identificado no perfil conectado. O nome, por si só, não comprova finalidade nem maturidade; revisar README, estrutura, testes e histórico antes de publicar uma descrição definitiva.
+
+31
+	
+
+meurh
+	
+
+Público
+	
+
+Repositório identificado no perfil conectado. O nome, por si só, não comprova finalidade nem maturidade; revisar README, estrutura, testes e histórico antes de publicar uma descrição definitiva.
+
+32
+	
+
+tech-lab-studuio
+	
+
+Privado
+	
+
+Projeto de laboratório, estúdio, catálogo ou ferramenta de criação. Confirmar o caso de uso específico no README.
+
+33
+	
+
+Bitcoin-Protocol-Intelligence-Platform
+	
+
+Público
+	
+
+Projeto de protocolo, infraestrutura ou análise técnica. Confirmar o problema resolvido, arquitetura e limites do sistema.
+
+34
+	
+
+bpip-core
+	
+
+Público
+	
+
+Projeto com indicação de backend, API ou núcleo de software. Confirmar endpoints, banco de dados, autenticação e cobertura de testes.
+
+35
+	
+
+CallShield-ML
+	
+
+Público
+	
+
+Projeto com indicação de segurança, diagnóstico ou operações técnicas. Confirmar escopo, uso responsável, testes e documentação.
+
+36
+	
+
+skynet-governance-protocol
+	
+
+Privado
+	
+
+Projeto de protocolo, infraestrutura ou análise técnica. Confirmar o problema resolvido, arquitetura e limites do sistema.
+
+37
+	
+
+Daiko-sushi
+	
+
+Público
+	
+
+Projeto relacionado a inteligência artificial, agentes ou ferramentas de IA. A descrição funcional precisa ser confirmada no README e no código.
+
+38
+	
+
+tech-lab-wb
+	
+
+Privado
+	
+
+Projeto de laboratório, estúdio, catálogo ou ferramenta de criação. Confirmar o caso de uso específico no README.
+
+39
+	
+
+vini-amral
+	
+
+Público
+	
+
+Repositório identificado no perfil conectado. O nome, por si só, não comprova finalidade nem maturidade; revisar README, estrutura, testes e histórico antes de publicar uma descrição definitiva.
+
+40
+	
+
+tia-celia
+	
+
+Público
+	
+
+Projeto de aplicação, site ou experimento voltado a um negócio, marca ou comunidade. Confirmar objetivo e funcionalidades atuais.
+
+41
+	
+
+super-dame
+	
+
+Público
+	
+
+Projeto de aplicação, site ou experimento voltado a um negócio, marca ou comunidade. Confirmar objetivo e funcionalidades atuais.
+
+42
+	
+
+resbach-records-super-dame
+	
+
+Privado
+	
+
+Projeto ligado a mídia, conteúdo, rádio ou marca DMG. Confirmar objetivo, recursos e situação atual.
+
+43
+	
+
+Tech-Lab-ai-Metch-app
+	
+
+Privado
+	
+
+Projeto relacionado a inteligência artificial, agentes ou ferramentas de IA. A descrição funcional precisa ser confirmada no README e no código.
+
+44
+	
+
+StudioBuilder-IA
+	
+
+Público
+	
+
+Projeto de laboratório, estúdio, catálogo ou ferramenta de criação. Confirmar o caso de uso específico no README.
+
+45
+	
+
+Code-Forge
+	
+
+Público
+	
+
+Repositório identificado no perfil conectado. O nome, por si só, não comprova finalidade nem maturidade; revisar README, estrutura, testes e histórico antes de publicar uma descrição definitiva.
+
+46
+	
+
+New-Horizons
+	
+
+Público
+	
+
+Repositório identificado no perfil conectado. O nome, por si só, não comprova finalidade nem maturidade; revisar README, estrutura, testes e histórico antes de publicar uma descrição definitiva.
+
+47
+	
+
+techlabs-global-consulting
+	
+
+Público
+	
+
+Repositório identificado no perfil conectado. O nome, por si só, não comprova finalidade nem maturidade; revisar README, estrutura, testes e histórico antes de publicar uma descrição definitiva.
+
+48
+	
+
+dresbach-group
+	
+
+Privado
+	
+
+Repositório identificado no perfil conectado. O nome, por si só, não comprova finalidade nem maturidade; revisar README, estrutura, testes e histórico antes de publicar uma descrição definitiva.
+
+49
+	
+
+Api-Diagnostic-Agent
+	
+
+Privado
+	
+
+Projeto com indicação de backend, API ou núcleo de software. Confirmar endpoints, banco de dados, autenticação e cobertura de testes.
+
+50
+	
+
+clear-forge
+	
+
+Público
+	
+
+Repositório identificado no perfil conectado. O nome, por si só, não comprova finalidade nem maturidade; revisar README, estrutura, testes e histórico antes de publicar uma descrição definitiva.
+
+51
+	
+
+catalogo-tech-lab
+	
+
+Privado
+	
+
+Projeto de laboratório, estúdio, catálogo ou ferramenta de criação. Confirmar o caso de uso específico no README.
+
+52
+	
+
+painel-administrativo
+	
+
+Público
+	
+
+Projeto relacionado a inteligência artificial, agentes ou ferramentas de IA. A descrição funcional precisa ser confirmada no README e no código.
+
+53
+	
+
+gatte-tecnologia
+	
+
+Público
+	
+
+Projeto de laboratório, estúdio, catálogo ou ferramenta de criação. Confirmar o caso de uso específico no README.
+
+54
+	
+
+gatte-studio-ai
+	
+
+Privado
+	
+
+Projeto relacionado a inteligência artificial, agentes ou ferramentas de IA. A descrição funcional precisa ser confirmada no README e no código.
+
+55
+	
+
+GATTE_Bot
+	
+
+Público
+	
+
+Projeto de laboratório, estúdio, catálogo ou ferramenta de criação. Confirmar o caso de uso específico no README.
+
+56
+	
+
+ava-ai-core
+	
+
+Público
+	
+
+Projeto relacionado a inteligência artificial, agentes ou ferramentas de IA. A descrição funcional precisa ser confirmada no README e no código.
+
+57
+	
+
+GATTE-ERP
+	
+
+Privado
+	
+
+Sistema de negócio, painel administrativo, ERP, PDV ou gestão. Confirmar módulos concluídos e se os dados de demonstração são seguros.
+
+58
+	
+
+Vini-Amaral---Site-Oficial
+	
+
+Público
+	
+
+Projeto de interface web/site. Confirmar público-alvo, framework, páginas implementadas e se existe demonstração pública.
+
+59
+	
+
+radio-dmg
+	
+
+Privado
+	
+
+Projeto ligado a mídia, conteúdo, rádio ou marca DMG. Confirmar objetivo, recursos e situação atual.
+
+60
+	
+
+hot-dog-do-vini
+	
+
+Público
+	
+
+Projeto de aplicação, site ou experimento voltado a um negócio, marca ou comunidade. Confirmar objetivo e funcionalidades atuais.
+
+61
+	
+
+SIPT
+	
+
+Público
+	
+
+Projeto de protocolo, infraestrutura ou análise técnica. Confirmar o problema resolvido, arquitetura e limites do sistema.
+
+62
+	
+
+familia-amaral
+	
+
+Público
+	
+
+Projeto de aplicação, site ou experimento voltado a um negócio, marca ou comunidade. Confirmar objetivo e funcionalidades atuais.
+
+63
+	
+
+pct-political-platform
+	
+
+Privado
+	
+
+Repositório identificado no perfil conectado. O nome, por si só, não comprova finalidade nem maturidade; revisar README, estrutura, testes e histórico antes de publicar uma descrição definitiva.
+
+64
+	
+
+vendagourmet-erp-saas
+	
+
+Privado
+	
+
+Sistema de negócio, painel administrativo, ERP, PDV ou gestão. Confirmar módulos concluídos e se os dados de demonstração são seguros.
+
+65
+	
+
+DRESBACH-MEDIA
+	
+
+Privado
+	
+
+Projeto ligado a mídia, conteúdo, rádio ou marca DMG. Confirmar objetivo, recursos e situação atual.
+
+66
+	
+
+dresbach-beta-core-panel
+	
+
+Privado
+	
+
+Projeto com indicação de backend, API ou núcleo de software. Confirmar endpoints, banco de dados, autenticação e cobertura de testes.
+
+67
+	
+
+Dresbach-Core-Host---ThreatDesk
+	
+
+Privado
+	
+
+Componente do conjunto ThreatDesk. Pelo nome, indica parte específica da solução; confirmar função e maturidade no README.
+
+68
+	
+
+ThreatDesk-Backend
+	
+
+Privado
+	
+
+Componente do conjunto ThreatDesk. Pelo nome, indica parte específica da solução; confirmar função e maturidade no README.
+
+69
+	
+
+ThreatDesk-Frontend-Site
+	
+
+Privado
+	
+
+Componente do conjunto ThreatDesk. Pelo nome, indica parte específica da solução; confirmar função e maturidade no README.
+
+70
+	
+
+ThreatDesk-Frontend-Client
+	
+
+Privado
+	
+
+Componente do conjunto ThreatDesk. Pelo nome, indica parte específica da solução; confirmar função e maturidade no README.
+
+71
+	
+
+ThreatDesk-Frontend-Admin
+	
+
+Privado
+	
+
+Componente do conjunto ThreatDesk. Pelo nome, indica parte específica da solução; confirmar função e maturidade no README.
+
+72
+	
+
+ThreatDesk-Mobile
+	
+
+Privado
+	
+
+Componente do conjunto ThreatDesk. Pelo nome, indica parte específica da solução; confirmar função e maturidade no README.
+
+73
+	
+
+ThreatDesk-Docs
+	
+
+Privado
+	
+
+Componente do conjunto ThreatDesk. Pelo nome, indica parte específica da solução; confirmar função e maturidade no README.
+
+74
+	
+
+ThreatDesk-Agent
+	
+
+Privado
+	
+
+Componente do conjunto ThreatDesk. Pelo nome, indica parte específica da solução; confirmar função e maturidade no README.
+
+75
+	
+
+ThreatDesk-Deploy
+	
+
+Privado
+	
+
+Componente do conjunto ThreatDesk. Pelo nome, indica parte específica da solução; confirmar função e maturidade no README.
+
+76
+	
+
+deevo
+	
+
+Privado
+	
+
+Repositório identificado no perfil conectado. O nome, por si só, não comprova finalidade nem maturidade; revisar README, estrutura, testes e histórico antes de publicar uma descrição definitiva.
+
+77
+	
+
+DEEVO-FINACEIRAS
+	
+
+Privado
+	
+
+Repositório identificado no perfil conectado. O nome, por si só, não comprova finalidade nem maturidade; revisar README, estrutura, testes e histórico antes de publicar uma descrição definitiva.
+
+78
+	
+
+DEEVO-APP-ANDROID
+	
+
+Público
+	
+
+Projeto relacionado a aplicativo Android ou experiência móvel. Confirmar plataforma, funcionalidades, build e disponibilidade de instalação.
+
+79
+	
+
+DEEVO-HOLDING-LTDA
+	
+
+Privado
+	
+
+Repositório identificado no perfil conectado. O nome, por si só, não comprova finalidade nem maturidade; revisar README, estrutura, testes e histórico antes de publicar uma descrição definitiva.
+
+80
+	
+
+DEEVO-HOLDING-LCC
+	
+
+Privado
+	
+
+Repositório identificado no perfil conectado. O nome, por si só, não comprova finalidade nem maturidade; revisar README, estrutura, testes e histórico antes de publicar uma descrição definitiva.
+
+81
+	
+
+NOVODEEVO
+	
+
+Privado
+	
+
+Repositório identificado no perfil conectado. O nome, por si só, não comprova finalidade nem maturidade; revisar README, estrutura, testes e histórico antes de publicar uma descrição definitiva.
+
+82
+	
+
+crm-deevo
+	
+
+Privado
+	
+
+Sistema de negócio, painel administrativo, ERP, PDV ou gestão. Confirmar módulos concluídos e se os dados de demonstração são seguros.
+
+83
+	
+
+vini-amaral.portifolio
+	
+
+Público
+	
+
+Projeto de interface web/site. Confirmar público-alvo, framework, páginas implementadas e se existe demonstração pública.
+
+84
+	
+
+Meu--site-portifolio-vini
+	
+
+Privado
+	
+
+Projeto de interface web/site. Confirmar público-alvo, framework, páginas implementadas e se existe demonstração pública.
+
+85
+	
+
+PDV-SUPER-MARKET
+	
+
+Público
+	
+
+Sistema de negócio, painel administrativo, ERP, PDV ou gestão. Confirmar módulos concluídos e se os dados de demonstração são seguros.
+
+86
+	
+
+brand-plus
+	
+
+Público
+	
+
+Repositório identificado no perfil conectado. O nome, por si só, não comprova finalidade nem maturidade; revisar README, estrutura, testes e histórico antes de publicar uma descrição definitiva.
+
+87
+	
+
+brand-plus-platform
+	
+
+Privado
+	
+
+Repositório identificado no perfil conectado. O nome, por si só, não comprova finalidade nem maturidade; revisar README, estrutura, testes e histórico antes de publicar uma descrição definitiva.
+
+88
+	
+
+Burguesia-demo
+	
+
+Público
+	
+
+Repositório identificado no perfil conectado. O nome, por si só, não comprova finalidade nem maturidade; revisar README, estrutura, testes e histórico antes de publicar uma descrição definitiva.
+
+89
+	
+
+meu-negocio-android
+	
+
+Privado
+	
+
+Projeto relacionado a aplicativo Android ou experiência móvel. Confirmar plataforma, funcionalidades, build e disponibilidade de instalação.
+
+90
+	
+
+egui404-cyber-awareness
+	
+
+Público
+	
+
+Projeto com indicação de segurança, diagnóstico ou operações técnicas. Confirmar escopo, uso responsável, testes e documentação.
+
+91
+	
+
+e-gui-404-beck-end
+	
+
+Público
+	
+
+Projeto com indicação de backend, API ou núcleo de software. Confirmar endpoints, banco de dados, autenticação e cobertura de testes.
+
+92
+	
+
+deevo-pay-front-end-cliente
+	
+
+Privado
+	
+
+Projeto de interface web/site. Confirmar público-alvo, framework, páginas implementadas e se existe demonstração pública.
+
+93
+	
+
+chat-ia-usb
+	
+
+Público
+	
+
+Repositório identificado no perfil conectado. O nome, por si só, não comprova finalidade nem maturidade; revisar README, estrutura, testes e histórico antes de publicar uma descrição definitiva.
+
+94
+	
+
+oracle-ai
+	
+
+Privado
+	
+
+Projeto relacionado a inteligência artificial, agentes ou ferramentas de IA. A descrição funcional precisa ser confirmada no README e no código.
+
+95
+	
+
+test-next-vercel
+	
+
+Público
+	
+
+Repositório identificado no perfil conectado. O nome, por si só, não comprova finalidade nem maturidade; revisar README, estrutura, testes e histórico antes de publicar uma descrição definitiva.
+
+96
+	
+
+Cyrus-mcp
+	
+
+Privado
+	
+
+Projeto relacionado a inteligência artificial, agentes ou ferramentas de IA. A descrição funcional precisa ser confirmada no README e no código.
+
+97
+	
+
+Cyrus
+	
+
+Privado
+	
+
+Projeto relacionado a inteligência artificial, agentes ou ferramentas de IA. A descrição funcional precisa ser confirmada no README e no código.
+
+98
+	
+
+flow-app-android
+	
+
+Privado
+	
+
+Projeto relacionado a aplicativo Android ou experiência móvel. Confirmar plataforma, funcionalidades, build e disponibilidade de instalação.
+
+99
+	
+
+flow-web
+	
+
+Privado
+	
+
+Projeto de interface web/site. Confirmar público-alvo, framework, páginas implementadas e se existe demonstração pública.
+
+100
+	
+
+beckend-flow
+	
+
+Privado
+	
+
+Projeto com indicação de backend, API ou núcleo de software. Confirmar endpoints, banco de dados, autenticação e cobertura de testes.
+
+5. Perfil pessoal — viniamaral2026-cpu
+
+Perfil: https://github.com/viniamaral2026-cpu
+
+A consulta autorizada retornou zero repositórios para este perfil. Em contexto anterior, foram mencionados os repositórios instituto-dresbach-fit e hd-inteligent-ai, mas eles não foram confirmados pela listagem atual. Devem ser verificados antes de entrarem como registros confirmados neste inventário.
+
+instituto-dresbach-fit
+
+https://github.com/viniamaral2026-cpu/instituto-dresbach-fit
+
+Projeto anteriormente mencionado para o Instituto Dresbach; link e existência atuais ainda não confirmados pela consulta desta sessão.
+
+hd-inteligent-ai
+
+https://github.com/viniamaral2026-cpu/hd-inteligent-ai
+
+Repositório anteriormente mencionado ligado a ferramentas/ambiente de IA; link e existência atuais ainda não confirmados pela consulta desta sessão.
+
+6. Critério recomendado para o portfólio internacional
+
+Destacar primeiro os projetos da Enigmy Neutral que tenham README claro, demonstração verificável, arquitetura explicada e estado real documentado.
+
+Manter repositórios privados fora dos links públicos de código; oferecer acesso privado apenas mediante autorização explícita.
+
+Classificar cada projeto como: protótipo, em desenvolvimento, demonstração, beta ou produção — apenas quando a classificação for comprovada.
+
+Não chamar um repositório de produto pronto apenas por existir. Validar build, testes, segurança, configuração de implantação e documentação.
+
+Evitar expor credenciais, dados pessoais, configurações internas ou detalhes sensíveis ao preparar demos e capturas de tela.
+
+Prioridade inicial de auditoria: enigmy-neutral, enigmy-neutral-agente, Modulo-nincode, pluguin-module-nincode, nimcode-website, devnet e sovereign-ai-infrastructure.
+
+7. Próxima etapa para fechar o inventário
+
+Este documento consolida os nomes e a visibilidade dos 112 repositórios retornados nos perfis Enigmy Neutral e FLOW. Para uma versão final de portfólio, falta recuperar a listagem do perfil pessoal pela conexão correta e validar individualmente os READMEs dos projetos prioritários; as descrições dos demais são deliberadamente preliminares.
