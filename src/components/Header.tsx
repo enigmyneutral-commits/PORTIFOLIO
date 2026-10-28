@@ -65,6 +65,15 @@ export const Header: React.FC<HeaderProps> = ({ currentView, onNavigate, onOpenI
         {/* Zone 3: Language Toggle & Primary Action */}
         <div className="flex items-center gap-3 shrink-0">
           
+          {/* Provisional Domain Tag */}
+          <span className="hidden xl:inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#101315] border border-[#293033] text-[10px] font-mono text-[#737D77]">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#F2C66D]" />
+            <span className="text-[#F5F7F4] font-medium">dmgrecords.com.br</span>
+            <span className="text-[#A4ADA8] text-[9px] uppercase tracking-wider">
+              [{language === 'pt-BR' ? 'Provisório' : 'Provisional'}]
+            </span>
+          </span>
+
           {/* Language Selector */}
           <div className="flex items-center bg-[#101315] border border-[#293033] rounded-md p-0.5 text-xs font-mono">
             <button

@@ -196,8 +196,13 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenPrivacy, onOpe
             </div>
             <div className="text-[11px] font-mono text-[#A4ADA8]">
               {language === 'pt-BR' 
-                ? 'Empresa de tecnologia sediada no Paraguai · Atuação internacional' 
-                : 'Technology company based in Paraguay · International operations'}
+                ? 'Domínio provisório: dmgrecords.com.br · Empresa de tecnologia sediada no Paraguai · Atuação internacional' 
+                : 'Provisional domain: dmgrecords.com.br · Technology company based in Paraguay · International operations'}
+            </div>
+            <div className="text-[10px] font-mono text-[#737D77]">
+              {language === 'pt-BR'
+                ? 'Ambiente temporário de publicação e staging durante o provisionamento de infraestrutura global.'
+                : 'Temporary staging and publication environment during global infrastructure provisioning.'}
             </div>
           </div>
 

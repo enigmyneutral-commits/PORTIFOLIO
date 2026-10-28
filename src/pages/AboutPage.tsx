@@ -79,6 +79,13 @@ export const AboutPage: React.FC = () => {
           <p className="text-xs sm:text-sm text-[#A4ADA8] leading-relaxed">
             {t.about.transparencyBody2}
           </p>
+
+          <div className="p-3 bg-[#15191B] border border-[#F2C66D]/30 rounded-md text-xs font-mono text-[#F5F7F4] flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-[#F2C66D] shrink-0" />
+            <span>
+              <strong>{language === 'pt-BR' ? 'Domínio Provisório:' : 'Provisional Domain:'}</strong> dmgrecords.com.br — {language === 'pt-BR' ? 'Staging temporário ativo durante o provisionamento da infraestrutura global da Enigmy Neutral.' : 'Active temporary staging environment during Enigmy Neutral global infrastructure deployment.'}
+            </span>
+          </div>
         </div>
 
         <div className="p-8 bg-[#101315] border border-[#293033] rounded-xl space-y-4">

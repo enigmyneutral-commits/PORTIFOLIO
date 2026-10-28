@@ -18,9 +18,15 @@ import {
 
 interface EngineeringPageProps {
   onOpenInquiry: (serviceName?: string) => void;
+  onOpenAgentStudio?: () => void;
+  onOpenAgentChat?: () => void;
 }
 
-export const EngineeringPage: React.FC<EngineeringPageProps> = ({ onOpenInquiry }) => {
+export const EngineeringPage: React.FC<EngineeringPageProps> = ({ 
+  onOpenInquiry,
+  onOpenAgentStudio,
+  onOpenAgentChat
+}) => {
   const { language, t } = useLanguage();
   const [activeTab, setActiveTab] = useState<string>(ENGINEERING_SERVICES[0].id);
 
@@ -66,6 +72,48 @@ export const EngineeringPage: React.FC<EngineeringPageProps> = ({ onOpenInquiry 
               ? 'Não prometemos prazos ou preços fixos antes de avaliar especificações técnicas e complexidade do escopo.'
               : 'We do not promise fixed prices or turnaround timelines before reviewing technical specifications and architectural scope.'}
           </span>
+        </div>
+      </div>
+
+      {/* ENIGMY NEUTRAL AGENT: CODEBASE & ARCHITECTURE AUDITOR CALLOUT */}
+      <div className="p-6 sm:p-8 bg-gradient-to-r from-[#101315] via-[#15191B] to-[#1a2023] border border-[#B7F36B]/40 rounded-xl space-y-6 shadow-xl">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          <div className="space-y-2 max-w-2xl">
+            <div className="flex items-center gap-2 text-xs font-mono text-[#B7F36B]">
+              <Cpu className="w-4 h-4" />
+              <span className="font-bold uppercase tracking-wider">
+                {language === 'pt-BR' ? 'Ferramenta de Auditoria Inteligente' : 'Smart Architecture Audit Tool'}
+              </span>
+            </div>
+            <h2 className="text-xl sm:text-2xl font-bold font-mono text-[#F5F7F4]">
+              {language === 'pt-BR' 
+                ? 'Agente Enigmy Neutral: Auditoria de Repositórios & Código'
+                : 'Enigmy Neutral Agent: Architecture & Codebase Auditor'}
+            </h2>
+            <p className="text-xs sm:text-sm text-[#A4ADA8] leading-relaxed">
+              {language === 'pt-BR'
+                ? 'Vincule a URL do seu repositório GitHub ou envie um arquivo ZIP / PDF. Nosso agente faz uma análise profunda de arquitetura, identifica vulnerabilidades e gargalos, gera um relatório completo para download e orça o projeto conforme o mercado DEV internacional.'
+                : 'Link your GitHub repository or upload a ZIP archive / PDF. Our engineering agent conducts an in-depth architecture audit, identifies vulnerabilities and bottlenecks, generates a downloadable technical dossier, and calculates international dev market pricing.'}
+            </p>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 shrink-0">
+            <button
+              onClick={onOpenAgentStudio}
+              className="inline-flex items-center justify-center gap-2 px-5 py-3.5 bg-[#B7F36B] hover:bg-[#8FCB4F] text-[#080A0B] font-mono font-bold text-xs sm:text-sm rounded-md transition-colors cursor-pointer shadow-sm text-center"
+            >
+              <Terminal className="w-4 h-4" />
+              <span>{language === 'pt-BR' ? 'Iniciar Auditoria de Código' : 'Launch Codebase Auditor'}</span>
+            </button>
+
+            <button
+              onClick={onOpenAgentChat}
+              className="inline-flex items-center justify-center gap-2 px-4 py-3.5 bg-[#15191B] hover:bg-[#202528] border border-[#293033] text-[#F5F7F4] font-mono text-xs rounded-md transition-colors cursor-pointer text-center"
+            >
+              <Cpu className="w-4 h-4 text-[#B7F36B]" />
+              <span>{language === 'pt-BR' ? 'Chat com o Agente' : 'Chat with Agent'}</span>
+            </button>
+          </div>
         </div>
       </div>
 

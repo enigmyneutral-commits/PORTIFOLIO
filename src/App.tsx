@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { LanguageProvider } from './context/LanguageContext';
 import { Header } from './components/Header';
+import { ProvisionalDomainBanner } from './components/ProvisionalDomainBanner';
 import { Footer } from './components/Footer';
 import { HomePage } from './pages/HomePage';
 import { EngineeringPage } from './pages/EngineeringPage';
 import { ProductsPage } from './pages/ProductsPage';
 import { ProjectsPage } from './pages/ProjectsPage';
 import { ProjectDetailPage } from './pages/ProjectDetailPage';
+import { AgentStudioPage } from './pages/AgentStudioPage';
 import { TechnologyPage } from './pages/TechnologyPage';
 import { AboutPage } from './pages/AboutPage';
 import { ContactPage } from './pages/ContactPage';
@@ -14,7 +16,9 @@ import { PrivateAccessModal } from './components/PrivateAccessModal';
 import { ProductModal } from './components/ProductModal';
 import { InquiryModal } from './components/InquiryModal';
 import { PolicyModal } from './components/PolicyModal';
+import { AgentChatDrawer } from './components/AgentChatDrawer';
 import { RepositoryItem, ProductItem } from './types';
+import { AgentAuditReport } from './types/agent';
 import { REPOSITORIES } from './data/repositories';
 
 function AppContent() {
@@ -31,7 +35,10 @@ function AppContent() {
     if (hash.startsWith('project/')) {
       return 'project-detail';
     }
-    const validViews = ['home', 'engineering', 'products', 'projects', 'technology', 'about', 'contact'];
+    if (hash === 'agent-studio' || hash === 'agent-audit') {
+      return 'agent-studio';
+    }
+    const validViews = ['home', 'engineering', 'products', 'projects', 'technology', 'about', 'contact', 'agent-studio'];
     return validViews.includes(hash) ? hash : 'home';
   });
 
@@ -39,6 +46,10 @@ function AppContent() {
   const [selectedProductForModal, setSelectedProductForModal] = useState<ProductItem | null>(null);
   const [inquiryModalOpen, setInquiryModalOpen] = useState(false);
   const [policyModalType, setPolicyModalType] = useState<'privacy' | 'terms' | null>(null);
+  
+  // Agent state
+  const [isAgentChatOpen, setIsAgentChatOpen] = useState(false);
+  const [studioReport, setStudioReport] = useState<AgentAuditReport | null>(null);
 
   // Sync hash changes
   useEffect(() => {
@@ -53,7 +64,12 @@ function AppContent() {
         return;
       }
 
-      const validViews = ['home', 'engineering', 'products', 'projects', 'technology', 'about', 'contact'];
+      if (hash === 'agent-studio' || hash === 'agent-audit') {
+        setCurrentView('agent-studio');
+        return;
+      }
+
+      const validViews = ['home', 'engineering', 'products', 'projects', 'technology', 'about', 'contact', 'agent-studio'];
       if (validViews.includes(hash)) {
         setCurrentView(hash);
       }
@@ -73,6 +89,15 @@ function AppContent() {
     setActiveProjectId(project.id);
     setCurrentView('project-detail');
     window.location.hash = `project/${project.id}`;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleOpenStudio = (report?: AgentAuditReport) => {
+    if (report) {
+      setStudioReport(report);
+    }
+    setCurrentView('agent-studio');
+    window.location.hash = 'agent-studio';
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -102,9 +127,12 @@ function AppContent() {
   return (
     <div className="min-h-screen bg-[#080A0B] text-[#F5F7F4] flex flex-col font-sans selection:bg-[#B7F36B] selection:text-[#080A0B]">
       
+      {/* Provisional Domain Global Notice */}
+      <ProvisionalDomainBanner />
+
       {/* Top Bar Header */}
       <Header
-        currentView={currentView === 'project-detail' ? 'projects' : currentView}
+        currentView={currentView === 'project-detail' ? 'projects' : currentView === 'agent-studio' ? 'engineering' : currentView}
         onNavigate={handleNavigate}
         onOpenInquiry={() => setInquiryModalOpen(true)}
       />
@@ -126,6 +154,16 @@ function AppContent() {
             onOpenInquiry={() => {
               setInquiryModalOpen(true);
             }}
+            onOpenAgentStudio={() => handleOpenStudio()}
+            onOpenAgentChat={() => setIsAgentChatOpen(true)}
+          />
+        )}
+
+        {currentView === 'agent-studio' && (
+          <AgentStudioPage
+            initialReport={studioReport}
+            onBack={() => handleNavigate('engineering')}
+            onOpenInquiry={() => setInquiryModalOpen(true)}
           />
         )}
 
@@ -171,6 +209,13 @@ function AppContent() {
         onNavigate={handleNavigate}
         onOpenPrivacy={() => setPolicyModalType('privacy')}
         onOpenPrinciples={() => setPolicyModalType('terms')}
+      />
+
+      {/* Floating Agent Chat Drawer (balãozinho no canto com a logo do Enigme Neutral Agente) */}
+      <AgentChatDrawer
+        onOpenStudio={handleOpenStudio}
+        isOpenExternal={isAgentChatOpen}
+        onCloseExternal={() => setIsAgentChatOpen(false)}
       />
 
       {/* Modals & Dialogs */}

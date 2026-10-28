@@ -3,12 +3,117 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      (function() {
+        // AI Studio environment: HMR is disabled, ignore WebSocket errors
+        if (typeof window !== 'undefined') {
+          // 1. Shim Vite HMR WebSocket so connect() succeeds without throwing or closing
+          if (window.WebSocket) {
+            var NativeWebSocket = window.WebSocket;
+            function SafeWebSocket(url, protocols) {
+              var isVite = (
+                protocols === 'vite-hmr' ||
+                (Array.isArray(protocols) && protocols.indexOf('vite-hmr') !== -1) ||
+                (typeof url === 'string' && (url.indexOf('token=') !== -1 || url.indexOf('vite') !== -1))
+              );
+              if (!isVite) {
+                return new NativeWebSocket(url, protocols);
+              }
+              var listeners = {};
+              var socket = {
+                url: String(url),
+                readyState: 1, // OPEN
+                OPEN: 1,
+                CONNECTING: 0,
+                CLOSING: 2,
+                CLOSED: 3,
+                send: function() {},
+                close: function() {
+                  socket.readyState = 3;
+                  if (listeners.close) {
+                    listeners.close.forEach(function(fn) { fn({ code: 1000, reason: 'normal' }); });
+                  }
+                },
+                addEventListener: function(event, callback) {
+                  listeners[event] = listeners[event] || [];
+                  listeners[event].push(callback);
+                  if (event === 'open') {
+                    setTimeout(function() {
+                      if (socket.readyState === 1) callback({ type: 'open' });
+                    }, 0);
+                  }
+                },
+                removeEventListener: function(event, callback) {
+                  if (!listeners[event]) return;
+                  listeners[event] = listeners[event].filter(function(fn) { return fn !== callback; });
+                },
+                dispatchEvent: function() { return true; }
+              };
+              return socket;
+            }
+            SafeWebSocket.OPEN = 1;
+            SafeWebSocket.CONNECTING = 0;
+            SafeWebSocket.CLOSING = 2;
+            SafeWebSocket.CLOSED = 3;
+            SafeWebSocket.prototype = NativeWebSocket.prototype;
+            window.WebSocket = SafeWebSocket;
+          }
+
+          // 2. Filter console.error from Vite WebSocket connection notices
+          var origError = console.error;
+          console.error = function() {
+            var args = Array.prototype.slice.call(arguments);
+            var str = args.map(function(a) {
+              if (typeof a === 'string') return a;
+              if (a && a.message) return a.message;
+              return '';
+            }).join(' ');
+            if (
+              str.indexOf('[vite] failed to connect to websocket') !== -1 ||
+              str.indexOf('WebSocket closed without opened') !== -1 ||
+              str.indexOf('createWebSocketModuleRunnerTransport') !== -1
+            ) {
+              return;
+            }
+            return origError.apply(console, args);
+          };
+
+          // 3. Catch window errors
+          window.addEventListener('error', function(event) {
+            var msg = (event && event.message) ? String(event.message) : '';
+            var filename = (event && event.filename) ? String(event.filename) : '';
+            if (
+              msg.indexOf('WebSocket') !== -1 ||
+              msg.indexOf('createWebSocketModuleRunnerTransport') !== -1 ||
+              filename.indexOf('@vite/client') !== -1
+            ) {
+              event.stopImmediatePropagation();
+              if (event.preventDefault) event.preventDefault();
+              return true;
+            }
+          }, true);
+
+          window.addEventListener('unhandledrejection', function(event) {
+            var reason = (event && event.reason) ? (event.reason.message || String(event.reason)) : '';
+            if (
+              reason.indexOf('WebSocket') !== -1 ||
+              reason.indexOf('createWebSocketModuleRunnerTransport') !== -1 ||
+              reason.indexOf('@vite/client') !== -1
+            ) {
+              event.stopImmediatePropagation();
+              if (event.preventDefault) event.preventDefault();
+            }
+          }, true);
+        }
+      })();
+    </script>
     <title>Enigmy Neutral – Software Engineering · AI Systems · Digital Infrastructure</title>
     <meta
       name="description"
-      content="Enigmy Neutral develops software products, AI-powered tools, developer infrastructure and digital platforms focused on practical engineering and reliability."
+      content="Enigmy Neutral develops software products, AI-powered tools, developer infrastructure and digital platforms focused on practical engineering and reliability. Staging domain: dmgrecords.com.br (Provisional)."
     />
-    <link rel="canonical" href="https://enigmyneutral.com" />
+    <link rel="canonical" href="https://dmgrecords.com.br" />
+    <meta name="provisional-domain" content="dmgrecords.com.br" />
     <meta name="author" content="Marcos Dresbach" />
 
     <link rel="icon" type="image/svg+xml" href="/assets/enigmy_logo_white.svg" />
@@ -46,6 +151,7 @@
       "@context": "https://schema.org",
       "@type": "Organization",
       "name": "Enigmy Neutral",
+      "url": "https://dmgrecords.com.br",
       "founder": {
         "@type": "Person",
         "name": "Marcos Dresbach"

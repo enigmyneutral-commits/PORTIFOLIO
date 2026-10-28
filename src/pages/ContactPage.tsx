@@ -173,6 +173,20 @@ export const ContactPage: React.FC = () => {
                   <span>{t.contact.direct.responseTimeValue}</span>
                 </div>
               </div>
+
+              {/* Provisional Domain Staging Notice */}
+              <div className="p-3.5 bg-[#15191B] border border-[#F2C66D]/30 rounded-lg space-y-1 text-xs font-mono mt-2">
+                <div className="flex items-center gap-1.5 text-[#F2C66D] font-bold text-[11px] uppercase tracking-wider">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#F2C66D]" />
+                  <span>{language === 'pt-BR' ? 'Domínio Provisório Oficial' : 'Official Provisional Domain'}</span>
+                </div>
+                <div className="text-sm font-bold text-[#F5F7F4]">dmgrecords.com.br</div>
+                <p className="text-[11px] text-[#A4ADA8] leading-relaxed">
+                  {language === 'pt-BR' 
+                    ? 'Este domínio é provisório e atua como endereço temporário enquanto a infraestrutura internacional primária é provisionada.'
+                    : 'This domain is provisional and serves as the temporary staging address during international infrastructure rollout.'}
+                </p>
+              </div>
             </div>
 
           </div>

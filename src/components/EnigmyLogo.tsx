@@ -2,17 +2,67 @@ import React from 'react';
 
 interface EnigmyLogoProps {
   className?: string;
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | 'xs';
   showSubtitle?: boolean;
+  variant?: 'full' | 'icon';
 }
 
 export const EnigmyLogo: React.FC<EnigmyLogoProps> = ({ 
   className = '', 
   size = 'md',
-  showSubtitle = false
+  showSubtitle = false,
+  variant = 'full'
 }) => {
+  if (variant === 'icon') {
+    const iconSizeClass = {
+      xs: 'w-5 h-5',
+      sm: 'w-6 h-6',
+      md: 'w-8 h-8',
+      lg: 'w-10 h-10',
+    }[size];
+
+    return (
+      <svg 
+        viewBox="0 0 100 100" 
+        className={`${iconSizeClass} ${className} shrink-0`}
+        fill="none" 
+        xmlns="http://www.w3.org/2000/svg"
+        aria-label="Enigmy Neutral Icon"
+      >
+        {/* Orbital top sweeping arc */}
+        <path 
+          d="M 18 42 C 34 16, 74 14, 90 32" 
+          stroke="#F5F7F4" 
+          strokeWidth="6" 
+          strokeLinecap="round" 
+        />
+        {/* Orbital bottom counter-sweep */}
+        <path 
+          d="M 12 56 C 4 64, 12 86, 42 90" 
+          stroke="#F5F7F4" 
+          strokeWidth="6" 
+          strokeLinecap="round" 
+        />
+        {/* Monogram EN */}
+        <text 
+          x="50" 
+          y="62" 
+          textAnchor="middle" 
+          fill="#FFFFFF" 
+          fontFamily="'Manrope', -apple-system, BlinkMacSystemFont, sans-serif" 
+          fontWeight="900" 
+          fontSize="36" 
+          letterSpacing="2"
+        >
+          EN
+        </text>
+      </svg>
+    );
+  }
+
   // Height presets
   const heightClass = {
+    xs: 'h-6',
     sm: 'h-8',
     md: 'h-10',
     lg: 'h-14',
@@ -30,19 +80,17 @@ export const EnigmyLogo: React.FC<EnigmyLogoProps> = ({
         {/* Top sweeping dynamic arch */}
         <path 
           d="M 68 68 C 96 30, 200 22, 268 54" 
-          stroke="currentColor" 
+          stroke="#F5F7F4" 
           strokeWidth="3.8" 
           strokeLinecap="round" 
-          className="text-white/80"
         />
         
         {/* Bottom left orbital sweep around the N */}
         <path 
           d="M 52 86 C 36 94, 34 116, 76 128" 
-          stroke="currentColor" 
+          stroke="#F5F7F4" 
           strokeWidth="3.8" 
           strokeLinecap="round" 
-          className="text-white/80"
         />
 
         {/* ENIGMY typography */}
