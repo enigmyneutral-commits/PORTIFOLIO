@@ -48,7 +48,7 @@ export const AgentStudioPage: React.FC<AgentStudioPageProps> = ({
     if (!repoUrl.trim() || isProcessing) return;
     setIsProcessing(true);
     try {
-      const res = await analyzeRepository(repoUrl);
+      const res = await analyzeRepository(repoUrl, isPt ? 'pt-BR' : 'en-US');
       setReport(res);
     } catch {
       // ignore
@@ -60,7 +60,7 @@ export const AgentStudioPage: React.FC<AgentStudioPageProps> = ({
   const handleFile = async (file: File) => {
     setIsProcessing(true);
     try {
-      const res = await analyzeFile(file);
+      const res = await analyzeFile(file, isPt ? 'pt-BR' : 'en-US');
       setReport(res);
     } catch {
       // ignore

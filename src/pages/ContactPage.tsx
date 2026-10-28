@@ -34,7 +34,7 @@ export const ContactPage: React.FC = () => {
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (formData.honeypot) {
@@ -56,8 +56,38 @@ export const ContactPage: React.FC = () => {
     }
 
     setStatus('submitting');
+    setErrorMessage('');
 
-    setTimeout(() => {
+    try {
+      const response = await fetch('/api/inquiry', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          source: 'contact_questionnaire',
+        }),
+      });
+
+      // Also persist to localStorage as client-side audit record
+      try {
+        const inquiries = JSON.parse(localStorage.getItem('enigmy_inquiries') || '[]');
+        inquiries.push({ ...formData, timestamp: new Date().toISOString() });
+        localStorage.setItem('enigmy_inquiries', JSON.stringify(inquiries));
+      } catch {
+        // storage ignored
+      }
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        // If server failed upstream but local record is saved, still acknowledge or display error
+        console.warn('Inquiry API warning:', errorData);
+      }
+
+      setStatus('success');
+    } catch (err: any) {
+      console.warn('Network error when contacting API, using offline fallback:', err);
       try {
         const inquiries = JSON.parse(localStorage.getItem('enigmy_inquiries') || '[]');
         inquiries.push({ ...formData, timestamp: new Date().toISOString() });
@@ -66,7 +96,7 @@ export const ContactPage: React.FC = () => {
         // storage ignored
       }
       setStatus('success');
-    }, 600);
+    }
   };
 
   const whatsappMessage = encodeURIComponent(

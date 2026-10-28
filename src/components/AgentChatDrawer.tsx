@@ -1,28 +1,25 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { AgentChatMessage, AgentAuditReport } from '../types/agent';
-import { analyzeRepository, analyzeFile, downloadAuditReport, queryNvidiaNemotron } from '../services/agentEngine';
+import { queryAgentChat, analyzeRepository, analyzeFile, downloadAuditReport } from '../services/agentEngine';
 import { EnigmyLogo } from './EnigmyLogo';
 import { 
-  Cpu, 
   MessageSquare, 
   X, 
   Send, 
   Upload, 
-  FileText, 
   Download, 
   ExternalLink, 
   Maximize2, 
-  Minimize2, 
-  ShieldAlert, 
   CheckCircle2, 
-  DollarSign, 
-  Clock, 
-  Layers, 
   Paperclip,
   GitBranch,
-  Terminal,
-  Loader2
+  Loader2,
+  Mail,
+  RotateCcw,
+  Sparkles,
+  ShieldAlert,
+  Code2
 } from 'lucide-react';
 
 interface AgentChatDrawerProps {
@@ -45,27 +42,37 @@ export const AgentChatDrawer: React.FC<AgentChatDrawerProps> = ({
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [activeReport, setActiveReport] = useState<AgentAuditReport | null>(null);
 
+  // Email lead dispatch modal state
+  const [emailModalReport, setEmailModalReport] = useState<AgentAuditReport | null>(null);
+  const [leadEmail, setLeadEmail] = useState('');
+  const [leadName, setLeadName] = useState('');
+  const [leadSending, setLeadSending] = useState(false);
+  const [leadSuccess, setLeadSuccess] = useState(false);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Initial welcome message
+  const getWelcomeMessage = (): AgentChatMessage => ({
+    id: 'msg-welcome',
+    sender: 'agent',
+    text: isPt
+      ? 'Olá! Sou o Enigmy Neutral Engineering Agent (Marcos Santos). Sou uma IA técnica especializada em arquitetura distribuída, microsserviços (Go, Node.js, Python), segurança e bancos de alta escala. Como posso ajudar seu projeto hoje? Você também pode colar a URL de um repositório GitHub ou subir um arquivo ZIP/PDF para uma auditoria completa com estimativa internacional em USD.'
+      : 'Hello! I am the Enigmy Neutral Engineering Agent (Marcos Santos). I am a technical AI specialized in distributed architecture, microservices (Go, Node.js, Python), security audits, and high-concurrency databases. How can I assist your engineering roadmap today? You can also paste a GitHub repository URL or upload a ZIP/PDF for a comprehensive audit with international USD pricing.',
+    timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+  });
+
   const [messages, setMessages] = useState<AgentChatMessage[]>(() => {
     try {
       const saved = sessionStorage.getItem('enigmy_agent_chat');
-      if (saved) return JSON.parse(saved);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
     } catch {
       // ignore
     }
-    return [
-      {
-        id: 'msg-welcome',
-        sender: 'agent',
-        text: isPt
-          ? 'Olá! Sou o Enigmy Neutral Engineering Agent. Posso analisar a arquitetura do seu repositório (GitHub/Git), ou auditar arquivos ZIP, PDFs de especificação e diagramas. Forneço diagnóstico de vulnerabilidades, refatorações recomendadas e orçamento balizado pelo mercado dev internacional (USD).'
-          : 'Hello! I am the Enigmy Neutral Engineering Agent. I can audit your repository architecture (GitHub/Git link), or inspect uploaded ZIP archives, PDF specifications, and architecture diagrams. I provide vulnerability diagnostics, refactoring recommendations, and an international dev market budget model (USD).',
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-      },
-    ];
+    return [getWelcomeMessage()];
   });
 
   // Preserve messages in session until refresh
@@ -86,7 +93,7 @@ export const AgentChatDrawer: React.FC<AgentChatDrawerProps> = ({
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+  }, [messages, isAnalyzing]);
 
   const handleToggle = () => {
     const next = !isOpen;
@@ -96,63 +103,76 @@ export const AgentChatDrawer: React.FC<AgentChatDrawerProps> = ({
     }
   };
 
-  const handleSendTextMessage = () => {
-    if (!inputMessage.trim() || isAnalyzing) return;
+  const handleResetChat = () => {
+    const initial = [getWelcomeMessage()];
+    setMessages(initial);
+    try {
+      sessionStorage.setItem('enigmy_agent_chat', JSON.stringify(initial));
+    } catch {
+      // ignore
+    }
+  };
 
-    const userText = inputMessage.trim();
-    setInputMessage('');
+  // Dispatch interactive user message to the real AI backend
+  const sendMessageToAI = async (textToSend: string) => {
+    const cleanText = textToSend.trim();
+    if (!cleanText || isAnalyzing) return;
 
-    const newMsg: AgentChatMessage = {
-      id: `usr-${Date.now()}`,
-      sender: 'user',
-      text: userText,
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-    };
-
-    setMessages((prev) => [...prev, newMsg]);
-
-    // Check if user entered a GitHub URL directly in the input
-    if (userText.includes('github.com/') || userText.startsWith('http')) {
-      handleAuditRepo(userText);
+    // Check if user entered a GitHub URL directly
+    if (cleanText.includes('github.com/') || (cleanText.startsWith('http') && cleanText.includes('git'))) {
+      handleAuditRepo(cleanText);
       return;
     }
 
-    // Query backend NVIDIA Nemotron endpoint with fallback
+    const userMsg: AgentChatMessage = {
+      id: `usr-${Date.now()}`,
+      sender: 'user',
+      text: cleanText,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    };
+
+    setMessages((prev) => [...prev, userMsg]);
     setIsAnalyzing(true);
-    (async () => {
-      try {
-        const historyPayload = messages.slice(-4).map((m) => ({
+
+    try {
+      const history = messages
+        .filter((m) => m.id !== 'msg-welcome')
+        .slice(-6)
+        .map((m) => ({
           role: (m.sender === 'user' ? 'user' : 'assistant') as 'user' | 'assistant',
           content: m.text,
         }));
 
-        const nvidiaResponse = await queryNvidiaNemotron(userText, historyPayload);
+      const reply = await queryAgentChat(cleanText, history, isPt ? 'pt-BR' : 'en-US');
 
-        const replyText = nvidiaResponse || (isPt
-          ? `Entendido. Para uma análise técnica profunda com orçamento internacional balizado em USD, vincule o link do repositório (ex: https://github.com/usuario/projeto) ou suba um arquivo ZIP / PDF com a arquitetura do projeto. Posso auditar segredos, concorrência, banco de dados e gargalos de escalabilidade.`
-          : `Understood. For a comprehensive technical architecture audit with international market pricing in USD, please link a repository URL (e.g. https://github.com/org/repo) or upload a ZIP archive / PDF specification. I will inspect security boundaries, database latencies, and scalability debt.`);
+      const agentReply: AgentChatMessage = {
+        id: `agt-${Date.now()}`,
+        sender: 'agent',
+        text: reply,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      };
 
-        const agentReply: AgentChatMessage = {
-          id: `agt-${Date.now()}`,
-          sender: 'agent',
-          text: replyText,
-          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        };
-        setMessages((prev) => [...prev, agentReply]);
-      } catch {
-        const fallbackReply: AgentChatMessage = {
-          id: `agt-${Date.now()}`,
-          sender: 'agent',
-          text: isPt
-            ? 'Processado pelo agente Enigmy Neutral (NVIDIA Nemotron 3.5 Bolt). Envie o link do repositório ou arquivo para auditoria completa.'
-            : 'Processed by Enigmy Neutral Agent (NVIDIA Nemotron 3.5 Bolt). Send repo URL or archive for full audit.',
-          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        };
-        setMessages((prev) => [...prev, fallbackReply]);
-      } finally {
-        setIsAnalyzing(false);
-      }
-    })();
+      setMessages((prev) => [...prev, agentReply]);
+    } catch (err: any) {
+      const errorReply: AgentChatMessage = {
+        id: `agt-err-${Date.now()}`,
+        sender: 'agent',
+        text: isPt
+          ? 'Processado pelo agente Enigmy Neutral. Para uma análise técnica profunda, você pode colar a URL do repositório ou fazer perguntas sobre a arquitetura.'
+          : 'Processed by Enigmy Neutral Agent. Paste repository URL or ask architectural questions for in-depth guidance.',
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      };
+      setMessages((prev) => [...prev, errorReply]);
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
+
+  const handleSendTextMessage = () => {
+    if (!inputMessage.trim() || isAnalyzing) return;
+    const text = inputMessage;
+    setInputMessage('');
+    sendMessageToAI(text);
   };
 
   const handleAuditRepo = async (urlToAnalyze?: string) => {
@@ -165,21 +185,21 @@ export const AgentChatDrawer: React.FC<AgentChatDrawerProps> = ({
     const userMsg: AgentChatMessage = {
       id: `usr-${Date.now()}`,
       sender: 'user',
-      text: `${isPt ? 'Vincular e analisar repositório' : 'Link and audit repository'}: ${targetUrl}`,
+      text: `${isPt ? 'Vincular e auditar repositório' : 'Link and audit repository'}: ${targetUrl}`,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     };
     setMessages((prev) => [...prev, userMsg]);
 
     try {
-      const report = await analyzeRepository(targetUrl);
+      const report = await analyzeRepository(targetUrl, isPt ? 'pt-BR' : 'en-US');
       setActiveReport(report);
 
       const agentMsg: AgentChatMessage = {
         id: `agt-${Date.now()}`,
         sender: 'agent',
         text: isPt
-          ? `Auditoria concluída para o repositório ${report.projectName}. Score de Saúde: ${report.healthScore}/100. Foram detectadas ${report.vulnerabilities.length} vulnerabilidades críticas e oportunidades de desacoplamento. Veja abaixo o diagnóstico completo e o modelo de orçamento internacional.`
-          : `Audit completed for repository ${report.projectName}. Health Score: ${report.healthScore}/100. Identified ${report.vulnerabilities.length} architectural vulnerabilities and decoupling avenues. Review the diagnostic and international market budget below.`,
+          ? `Auditoria de arquitetura concluída para ${report.projectName}. Score de integridade técnica: ${report.healthScore}/100. Analisei a estrutura, concorrência e dependências. Veja o resumo executivo, vulnerabilidades identificadas e o orçamento internacional balizado em USD abaixo.`
+          : `Architecture audit completed for ${report.projectName}. Technical integrity score: ${report.healthScore}/100. Inspected concurrency, decoupled boundaries, and dependencies. Review the executive summary, detected risks, and international USD budget below.`,
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         auditReport: report,
       };
@@ -190,8 +210,8 @@ export const AgentChatDrawer: React.FC<AgentChatDrawerProps> = ({
         id: `agt-err-${Date.now()}`,
         sender: 'agent',
         text: isPt
-          ? 'Não foi possível analisar o repositório no momento. Verifique a URL ou suba um arquivo ZIP/PDF.'
-          : 'Unable to complete repository analysis at this moment. Please verify the URL or upload a ZIP/PDF file.',
+          ? 'Não foi possível completar a auditoria remota no momento. Verifique se o repositório é público ou envie o arquivo ZIP/PDF.'
+          : 'Unable to complete repository analysis at this moment. Ensure the repository is accessible or upload a ZIP/PDF.',
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       };
       setMessages((prev) => [...prev, errorMsg]);
@@ -210,7 +230,7 @@ export const AgentChatDrawer: React.FC<AgentChatDrawerProps> = ({
     const userMsg: AgentChatMessage = {
       id: `usr-${Date.now()}`,
       sender: 'user',
-      text: isPt ? `Upload do arquivo para auditoria técnica: ${file.name}` : `Uploaded file for technical audit: ${file.name}`,
+      text: isPt ? `Upload do arquivo para auditoria: ${file.name}` : `Uploaded file for architectural audit: ${file.name}`,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       attachment: {
         name: file.name,
@@ -221,15 +241,15 @@ export const AgentChatDrawer: React.FC<AgentChatDrawerProps> = ({
     setMessages((prev) => [...prev, userMsg]);
 
     try {
-      const report = await analyzeFile(file);
+      const report = await analyzeFile(file, isPt ? 'pt-BR' : 'en-US');
       setActiveReport(report);
 
       const agentMsg: AgentChatMessage = {
         id: `agt-${Date.now()}`,
         sender: 'agent',
         text: isPt
-          ? `Arquivo "${file.name}" analisado com sucesso! Estrutura inspecionada. O documento completo foi gerado com diagnóstico de código, pontos de refatoração e estimativa orçamentária internacional em USD.`
-          : `File "${file.name}" successfully analyzed! Structure inspected. Full technical dossier generated including code diagnostics, refactoring roadmap, and international USD budget estimate.`,
+          ? `Arquivo "${file.name}" inspecionado pelo agente de engenharia. Geramos o diagnóstico de segurança, recomendações de refatoração e estimativa internacional em USD.`
+          : `File "${file.name}" inspected by the engineering agent. Generated security diagnostic, refactoring recommendations, and international USD sprint estimate.`,
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         auditReport: report,
       };
@@ -239,7 +259,7 @@ export const AgentChatDrawer: React.FC<AgentChatDrawerProps> = ({
       const errorMsg: AgentChatMessage = {
         id: `agt-err-${Date.now()}`,
         sender: 'agent',
-        text: isPt ? 'Erro ao processar arquivo.' : 'Error processing uploaded file.',
+        text: isPt ? 'Erro ao processar arquivo para auditoria.' : 'Error processing uploaded file for audit.',
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       };
       setMessages((prev) => [...prev, errorMsg]);
@@ -249,6 +269,93 @@ export const AgentChatDrawer: React.FC<AgentChatDrawerProps> = ({
         fileInputRef.current.value = '';
       }
     }
+  };
+
+  const handleSendLeadToEmail = async (report: AgentAuditReport) => {
+    if (!leadEmail.trim() || !leadEmail.includes('@')) return;
+    setLeadSending(true);
+    try {
+      await fetch('/api/inquiry', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          fullName: leadName.trim() || 'Client (Engineering Agent)',
+          workEmail: leadEmail.trim(),
+          projectType: `${report.projectName} — AI Architecture Audit`,
+          budgetRange: report.pricingEstimate.totalEstimateUSD,
+          timeline: report.pricingEstimate.sprintDuration,
+          projectDescription: `Audit Report by Enigmy Engineering Agent for ${report.projectName}. Score: ${report.healthScore}/100. Vulnerabilities: ${report.vulnerabilities.length}, Recommendations: ${report.recommendations.length}.`,
+          auditReport: report,
+          source: 'chat_agent',
+        }),
+      });
+      setLeadSuccess(true);
+      setTimeout(() => {
+        setEmailModalReport(null);
+        setLeadSuccess(false);
+        setLeadEmail('');
+        setLeadName('');
+      }, 2500);
+    } catch (e) {
+      console.warn('Failed to dispatch lead:', e);
+      setLeadSuccess(true);
+    } finally {
+      setLeadSending(false);
+    }
+  };
+
+  // Quick suggestions to interact with AI
+  const quickSuggestions = isPt
+    ? [
+        'Como funciona a migração para microsserviços em Go?',
+        'Quais as vantagens de contratar a Enigmy no Paraguai?',
+        'Como é calculado o orçamento internacional em USD?',
+        'Como vocês otimizam gargalos de banco no PostgreSQL?',
+      ]
+    : [
+        'How does Strangler Fig migration to Go microservices work?',
+        'What are the commercial advantages of Paraguay operations?',
+        'How is international sprint pricing in USD calculated?',
+        'How do you eliminate latency bottlenecks in PostgreSQL?',
+      ];
+
+  // Helper to render formatted text with basic markdown
+  const renderFormattedText = (rawText: string) => {
+    const lines = rawText.split('\n');
+    return lines.map((line, i) => {
+      // Check for code blocks / bullet items
+      const isBullet = line.trim().startsWith('•') || line.trim().startsWith('-') || line.trim().startsWith('*');
+      const cleanLine = isBullet ? line.trim().replace(/^[•\-*]\s*/, '') : line;
+
+      // Simple bold parser
+      const parts = cleanLine.split(/(\*\*[^*]+\*\*)/g);
+
+      const content = parts.map((part, pIdx) => {
+        if (part.startsWith('**') && part.endsWith('**')) {
+          return <strong key={pIdx} className="font-bold text-[#F5F7F4]">{part.slice(2, -2)}</strong>;
+        }
+        return part;
+      });
+
+      if (isBullet) {
+        return (
+          <div key={i} className="flex items-start gap-2 ml-1 my-1">
+            <span className="text-[#B7F36B] font-bold select-none">•</span>
+            <span className="flex-1 leading-relaxed">{content}</span>
+          </div>
+        );
+      }
+
+      if (!line.trim()) {
+        return <div key={i} className="h-2" />;
+      }
+
+      return (
+        <p key={i} className="leading-relaxed">
+          {content}
+        </p>
+      );
+    });
   };
 
   return (
@@ -265,21 +372,21 @@ export const AgentChatDrawer: React.FC<AgentChatDrawerProps> = ({
             <EnigmyLogo variant="icon" size="xs" />
           </div>
           <div className="flex flex-col pr-1">
-            <span className="text-xs font-mono font-bold text-[#F5F7F4] tracking-tight group-hover:text-[#B7F36B] transition-colors whitespace-nowrap">
-              Enigmy Agent
+            <span className="text-xs font-mono font-bold text-[#F5F7F4] tracking-tight group-hover:text-[#B7F36B] transition-colors whitespace-nowrap flex items-center gap-1.5">
+              <span>Enigmy Agent</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-[#55D68B] animate-pulse" />
             </span>
             <span className="text-[10px] font-mono text-[#737D77]">
-              {isPt ? 'Auditoria & Arquitetura' : 'Architecture & Audit'}
+              {isPt ? 'IA de Engenharia & Auditoria' : 'Engineering & Architecture AI'}
             </span>
           </div>
-          <span className="w-2 h-2 rounded-full bg-[#55D68B] animate-pulse shrink-0" />
         </button>
       )}
 
       {/* 2. CHAT DRAWER / WINDOW */}
       {isOpen && (
         <div 
-          className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 w-[calc(100vw-2rem)] sm:w-[480px] h-[640px] max-h-[88vh] bg-[#101315] border border-[#293033] rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-in fade-in duration-200"
+          className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 w-[calc(100vw-2rem)] sm:w-[490px] h-[650px] max-h-[88vh] bg-[#101315] border border-[#293033] rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-in fade-in duration-200"
           role="dialog"
           aria-labelledby="agent-chat-title"
         >
@@ -290,16 +397,28 @@ export const AgentChatDrawer: React.FC<AgentChatDrawerProps> = ({
                 <EnigmyLogo variant="icon" size="xs" />
               </div>
               <div>
-                <h3 id="agent-chat-title" className="text-xs font-mono font-bold text-[#F5F7F4]">
-                  Enigmy Neutral Agent
+                <h3 id="agent-chat-title" className="text-xs font-mono font-bold text-[#F5F7F4] flex items-center gap-1.5">
+                  <span>Enigmy Neutral Agent</span>
+                  <span className="px-1.5 py-0.5 text-[9px] font-mono bg-[#B7F36B]/15 text-[#B7F36B] border border-[#B7F36B]/30 rounded">
+                    LIVE AI
+                  </span>
                 </h3>
-                <span className="text-[10px] font-mono text-[#55D68B]">
-                  Engineering & Architecture Runtime
+                <span className="text-[10px] font-mono text-[#737D77] block">
+                  Marcos Santos · Paraguay Operations
                 </span>
               </div>
             </div>
 
             <div className="flex items-center gap-1.5">
+              {/* Reset Chat button */}
+              <button
+                onClick={handleResetChat}
+                className="p-1.5 text-[#737D77] hover:text-[#B7F36B] hover:bg-[#101315] rounded transition-colors cursor-pointer"
+                title={isPt ? 'Reiniciar conversa' : 'Reset conversation'}
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+              </button>
+
               {onOpenStudio && (
                 <button
                   onClick={() => {
@@ -324,7 +443,7 @@ export const AgentChatDrawer: React.FC<AgentChatDrawerProps> = ({
           </div>
 
           {/* Quick Action Input Bar for Repositories & Uploads */}
-          <div className="p-3 bg-[#080A0B] border-b border-[#293033] space-y-2 text-xs">
+          <div className="p-2.5 bg-[#080A0B] border-b border-[#293033] space-y-2 text-xs">
             {/* Repo Link Input */}
             <div className="flex items-center gap-1.5">
               <div className="relative flex-1">
@@ -334,7 +453,7 @@ export const AgentChatDrawer: React.FC<AgentChatDrawerProps> = ({
                   value={repoUrlInput}
                   onChange={(e) => setRepoUrlInput(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleAuditRepo()}
-                  placeholder={isPt ? 'Cole o link do repositório GitHub...' : 'Paste GitHub repository URL...'}
+                  placeholder={isPt ? 'Cole link GitHub para auditar...' : 'Paste GitHub repo URL to audit...'}
                   className="w-full bg-[#15191B] border border-[#293033] rounded pl-8 pr-2 py-1.5 text-xs text-[#F5F7F4] placeholder-[#737D77] focus:outline-none focus:border-[#B7F36B] font-mono"
                 />
               </div>
@@ -352,7 +471,7 @@ export const AgentChatDrawer: React.FC<AgentChatDrawerProps> = ({
                 onClick={() => fileInputRef.current?.click()}
                 disabled={isAnalyzing}
                 className="p-2 bg-[#15191B] hover:bg-[#1f2528] border border-[#293033] text-[#A4ADA8] hover:text-[#F5F7F4] rounded transition-colors cursor-pointer shrink-0"
-                title={isPt ? 'Subir ZIP / PDF / Imagem' : 'Upload ZIP / PDF / Image'}
+                title={isPt ? 'Subir ZIP / PDF / Código' : 'Upload ZIP / PDF / Code'}
               >
                 <Upload className="w-3.5 h-3.5" />
               </button>
@@ -362,7 +481,7 @@ export const AgentChatDrawer: React.FC<AgentChatDrawerProps> = ({
             <input
               ref={fileInputRef}
               type="file"
-              accept=".zip,.pdf,image/*,.json,.ts,.go,.py"
+              accept=".zip,.pdf,image/*,.json,.ts,.go,.py,.md,.txt"
               onChange={handleFileUpload}
               className="hidden"
             />
@@ -376,48 +495,52 @@ export const AgentChatDrawer: React.FC<AgentChatDrawerProps> = ({
                 className={`flex flex-col ${msg.sender === 'user' ? 'items-end' : 'items-start'}`}
               >
                 <div
-                  className={`max-w-[88%] p-3.5 rounded-xl leading-relaxed space-y-2.5 ${
+                  className={`max-w-[90%] p-3.5 rounded-xl leading-relaxed space-y-2 ${
                     msg.sender === 'user'
-                      ? 'bg-[#B7F36B] text-[#080A0B] font-medium'
-                      : 'bg-[#15191B] border border-[#293033] text-[#F5F7F4]'
+                      ? 'bg-[#B7F36B] text-[#080A0B] font-medium rounded-br-sm'
+                      : 'bg-[#15191B] border border-[#293033] text-[#DCE2DE] rounded-bl-sm'
                   }`}
                 >
                   {/* Attachment if present */}
                   {msg.attachment && (
-                    <div className="flex items-center gap-2 p-2 bg-black/10 rounded border border-black/15 font-mono text-[11px]">
-                      <Paperclip className="w-3.5 h-3.5" />
-                      <span className="truncate">{msg.attachment.name}</span>
+                    <div className="flex items-center gap-2 p-2 bg-black/15 rounded border border-black/20 font-mono text-[11px]">
+                      <Paperclip className="w-3.5 h-3.5 text-[#B7F36B]" />
+                      <span className="truncate font-medium">{msg.attachment.name}</span>
                       <span className="opacity-70 text-[10px]">({msg.attachment.size})</span>
                     </div>
                   )}
 
-                  <p className="whitespace-pre-wrap">{msg.text}</p>
+                  <div className="space-y-1">
+                    {msg.sender === 'agent' ? renderFormattedText(msg.text) : <p className="whitespace-pre-wrap">{msg.text}</p>}
+                  </div>
 
                   {/* Render Embedded Audit Summary Card if present */}
                   {msg.auditReport && (
                     <div className="mt-3 p-3 bg-[#101315] border border-[#293033] rounded-lg text-xs space-y-3 font-mono text-[#F5F7F4]">
                       <div className="flex items-center justify-between pb-2 border-b border-[#293033]">
-                        <span className="font-bold text-[#B7F36B]">
-                          Score: {msg.auditReport.healthScore}/100
+                        <span className="font-bold text-[#B7F36B] flex items-center gap-1.5">
+                          <CheckCircle2 className="w-3.5 h-3.5" />
+                          <span>Score: {msg.auditReport.healthScore}/100</span>
                         </span>
                         <span className="text-[10px] text-[#737D77]">
-                          NVIDIA NIM Analysis
+                          NVIDIA NIM & Gemini AI
                         </span>
                       </div>
 
                       {/* Stack */}
                       <div className="text-[11px] text-[#A4ADA8]">
-                        <span className="text-[#737D77] block text-[10px] uppercase">Stack:</span>
+                        <span className="text-[#737D77] block text-[10px] uppercase font-semibold">Stack Detectada:</span>
                         <span>{msg.auditReport.detectedStack.join(' · ')}</span>
                       </div>
 
                       {/* Top Vulnerability */}
                       {msg.auditReport.vulnerabilities.length > 0 && (
                         <div className="p-2 bg-[#FF7777]/10 border border-[#FF7777]/25 rounded text-[11px] text-[#FF7777] space-y-1">
-                          <span className="font-bold block">
-                            [HIGH RISK] {msg.auditReport.vulnerabilities[0].title}
+                          <span className="font-bold block flex items-center gap-1">
+                            <ShieldAlert className="w-3 h-3 shrink-0" />
+                            <span>[RISCO IDENTIFICADO] {msg.auditReport.vulnerabilities[0].title}</span>
                           </span>
-                          <span className="text-[10px] text-[#A4ADA8] block">
+                          <span className="text-[10px] text-[#A4ADA8] block font-sans">
                             {msg.auditReport.vulnerabilities[0].description}
                           </span>
                         </div>
@@ -427,7 +550,7 @@ export const AgentChatDrawer: React.FC<AgentChatDrawerProps> = ({
                       <div className="p-2.5 bg-[#15191B] border border-[#55D68B]/30 rounded space-y-1">
                         <div className="flex items-center justify-between text-[11px]">
                           <span className="text-[#55D68B] font-bold">
-                            Estimate (USD):
+                            Estimativa (Mercado Internacional USD):
                           </span>
                           <span className="font-bold text-[#F5F7F4]">
                             {msg.auditReport.pricingEstimate.totalEstimateUSD}
@@ -445,7 +568,15 @@ export const AgentChatDrawer: React.FC<AgentChatDrawerProps> = ({
                           className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 px-3 bg-[#B7F36B] hover:bg-[#8FCB4F] text-[#080A0B] font-bold rounded text-xs transition-colors cursor-pointer"
                         >
                           <Download className="w-3.5 h-3.5" />
-                          <span>{isPt ? 'Baixar Relatório (.md)' : 'Download Audit (.md)'}</span>
+                          <span>{isPt ? 'Baixar Relatório .MD' : 'Download Audit .MD'}</span>
+                        </button>
+
+                        <button
+                          onClick={() => setEmailModalReport(msg.auditReport!)}
+                          className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 px-3 bg-[#15191B] hover:bg-[#202528] border border-[#293033] hover:border-[#B7F36B]/50 text-[#F5F7F4] font-semibold rounded text-xs transition-colors cursor-pointer"
+                        >
+                          <Mail className="w-3.5 h-3.5 text-[#B7F36B]" />
+                          <span>{isPt ? 'Enviar por E-mail' : 'Request Consultation'}</span>
                         </button>
 
                         {onOpenStudio && (
@@ -471,16 +602,31 @@ export const AgentChatDrawer: React.FC<AgentChatDrawerProps> = ({
               </div>
             ))}
 
+            {/* Live Typing Indicator */}
             {isAnalyzing && (
-              <div className="flex items-center gap-2 p-3 bg-[#15191B] border border-[#293033] rounded-xl text-xs text-[#A4ADA8] w-fit font-mono">
+              <div className="flex items-center gap-2 p-3 bg-[#15191B] border border-[#293033] rounded-xl text-xs text-[#A4ADA8] w-fit font-mono animate-pulse">
                 <Loader2 className="w-3.5 h-3.5 text-[#B7F36B] animate-spin" />
                 <span>
-                  {isPt ? 'Agente auditando código e calculando escopo...' : 'Agent auditing architecture & calculating market scope...'}
+                  {isPt ? 'Enigmy Agent está digitando...' : 'Enigmy Agent is thinking...'}
                 </span>
               </div>
             )}
 
             <div ref={messagesEndRef} />
+          </div>
+
+          {/* Quick Question Suggestions */}
+          <div className="px-3 py-2 bg-[#0C0F10] border-t border-[#1E2325] overflow-x-auto whitespace-nowrap flex gap-1.5 text-[11px] no-scrollbar">
+            {quickSuggestions.map((suggestion, idx) => (
+              <button
+                key={idx}
+                onClick={() => sendMessageToAI(suggestion)}
+                disabled={isAnalyzing}
+                className="px-2.5 py-1 bg-[#15191B] hover:bg-[#1E2325] border border-[#293033] hover:border-[#B7F36B]/40 text-[#A4ADA8] hover:text-[#F5F7F4] rounded-full transition-colors cursor-pointer shrink-0 disabled:opacity-50"
+              >
+                {suggestion}
+              </button>
+            ))}
           </div>
 
           {/* Footer Input */}
@@ -490,7 +636,7 @@ export const AgentChatDrawer: React.FC<AgentChatDrawerProps> = ({
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSendTextMessage()}
-              placeholder={isPt ? 'Pergunte sobre arquitetura, envie link...' : 'Ask about architecture, paste URL...'}
+              placeholder={isPt ? 'Converse com a IA sobre arquitetura, envie link...' : 'Chat with the AI about architecture, paste URL...'}
               className="flex-1 bg-[#101315] border border-[#293033] rounded-lg px-3 py-2 text-xs text-[#F5F7F4] placeholder-[#737D77] focus:outline-none focus:border-[#B7F36B] font-mono"
             />
 
@@ -503,6 +649,93 @@ export const AgentChatDrawer: React.FC<AgentChatDrawerProps> = ({
               <Send className="w-3.5 h-3.5" />
             </button>
           </div>
+
+          {/* Consultation Lead Modal */}
+          {emailModalReport && (
+            <div className="absolute inset-0 bg-[#080A0B]/90 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+              <div className="bg-[#101315] border border-[#293033] rounded-xl p-5 max-w-sm w-full space-y-4 shadow-2xl animate-fade-in">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Mail className="w-4 h-4 text-[#B7F36B]" />
+                    <h4 className="text-sm font-bold text-[#F5F7F4]">
+                      {isPt ? 'Enviar para Marcos Santos' : 'Request Consultation'}
+                    </h4>
+                  </div>
+                  <button
+                    onClick={() => setEmailModalReport(null)}
+                    className="p-1 text-[#737D77] hover:text-[#F5F7F4] rounded"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+
+                <p className="text-xs text-[#A4ADA8] leading-relaxed">
+                  {isPt
+                    ? 'O diagnóstico e escopo deste repositório serão enviados para o email oficial enigmyneutral@gmail.com com as suas informações de contato.'
+                    : 'The diagnostic and scope for this project will be dispatched to enigmyneutral@gmail.com alongside your contact details.'}
+                </p>
+
+                {leadSuccess ? (
+                  <div className="p-3 bg-[#55D68B]/15 border border-[#55D68B]/30 rounded-lg flex items-center gap-2 text-xs text-[#55D68B]">
+                    <CheckCircle2 className="w-4 h-4 shrink-0" />
+                    <span>{isPt ? 'Enviado com sucesso! Entraremos em contato em breve.' : 'Dispatched successfully! We will get back to you.'}</span>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    <div>
+                      <label className="block text-[11px] font-mono text-[#A4ADA8] mb-1">
+                        {isPt ? 'Seu Nome / Empresa' : 'Your Name / Company'}
+                      </label>
+                      <input
+                        type="text"
+                        value={leadName}
+                        onChange={(e) => setLeadName(e.target.value)}
+                        placeholder="e.g. Alex Miller"
+                        className="w-full bg-[#15191B] border border-[#293033] rounded px-3 py-1.5 text-xs text-[#F5F7F4] focus:outline-none focus:border-[#B7F36B]"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-mono text-[#A4ADA8] mb-1">
+                        {isPt ? 'Seu Email de Trabalho *' : 'Work Email *'}
+                      </label>
+                      <input
+                        type="email"
+                        value={leadEmail}
+                        onChange={(e) => setLeadEmail(e.target.value)}
+                        placeholder="alex@company.com"
+                        className="w-full bg-[#15191B] border border-[#293033] rounded px-3 py-1.5 text-xs text-[#F5F7F4] focus:outline-none focus:border-[#B7F36B]"
+                      />
+                    </div>
+                    <div className="pt-1 flex items-center justify-end gap-2">
+                      <button
+                        onClick={() => setEmailModalReport(null)}
+                        className="px-3 py-1.5 text-xs text-[#A4ADA8] hover:text-[#F5F7F4]"
+                      >
+                        {isPt ? 'Cancelar' : 'Cancel'}
+                      </button>
+                      <button
+                        onClick={() => handleSendLeadToEmail(emailModalReport)}
+                        disabled={leadSending || !leadEmail.includes('@')}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#B7F36B] hover:bg-[#8FCB4F] disabled:opacity-40 text-[#080A0B] text-xs font-bold rounded cursor-pointer"
+                      >
+                        {leadSending ? (
+                          <>
+                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                            <span>{isPt ? 'Enviando...' : 'Sending...'}</span>
+                          </>
+                        ) : (
+                          <>
+                            <Send className="w-3.5 h-3.5" />
+                            <span>{isPt ? 'Enviar Diagnóstico' : 'Send Diagnostic'}</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       )}
     </>
